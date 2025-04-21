@@ -1,32 +1,11 @@
-// middleware.ts
-import { NextRequest, NextResponse } from 'next/server';
+// src/middleware.ts
+import createMiddleware from 'next-intl/middleware';
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Перенаправление с '/' на '/ru' по умолчанию
-  if (pathname === '/') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/ru';
-    return NextResponse.redirect(url);
-  }
-
-  // Извлечение локали из пути
-  const locale = pathname.split('/')[1];
-  if (!['en', 'ru', 'kk'].includes(locale)) {
-    return NextResponse.next();
-  }
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('X-NEXT-INTL-LOCALE', locale);
-
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-}
+export default createMiddleware({
+  locales: ['en', 'ru', 'kk'],
+  defaultLocale: 'en',
+});
 
 export const config = {
-  matcher: ['/', '/((?!_next|favicon.ico).*)'],
+  matcher: ['/', '/(en|ru|kk)/:path*'],
 };

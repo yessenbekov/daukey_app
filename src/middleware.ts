@@ -1,27 +1,26 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_LOCALES = ['ru', 'kk', 'en'];
-const DEFAULT_LOCALE = 'ru';
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Проверяем, указана ли локаль в пути
-  const pathnameIsMissingLocale = PUBLIC_LOCALES.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
-
-  if (pathnameIsMissingLocale) {
-    const locale = DEFAULT_LOCALE;
-    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
+  // Редирект с `/` на `/ru` по умолчанию
+  if (pathname === "/") {
+    const url = req.nextUrl.clone();
+    url.pathname = "/ru";
+    return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  // Получаем локаль из пути
+  const locale = pathname.split("/")[1] || "ru";
+
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("X-NEXT-INTL-LOCALE", locale);
+
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next|favicon.ico|images|icon.png).*)',
-  ],
+  matcher: ["/", "/((?!_next|favicon.ico).*)"],
 };

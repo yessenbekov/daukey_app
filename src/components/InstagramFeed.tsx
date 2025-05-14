@@ -7,6 +7,7 @@ const InstagramFeed = () => {
         Наш Instagram
       </h2>
       <iframe
+        loading="lazy"
         src="https://www.instagram.com/p/CODE_EMBED_HERE/embed"
         width="100%"
         height="500"

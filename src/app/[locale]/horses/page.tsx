@@ -1,60 +1,67 @@
-import Image from "next/image";
+"use client";
 
-export function HorsesPage() {
-  const horses = [
-    {
-      id: 1,
-      name: "Асыл",
-      image: "/horses/horse1.jpg",
-      video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    },
-    {
-      id: 2,
-      name: "Каратау",
-      image: "/horses/horse2.jpg",
-      video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    },
-  ];
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+export default function HorsesPage() {
+  const [horses, setHorses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { locale } = useParams();
+
+  useEffect(() => {
+    const fetchHorses = async () => {
+      const { data } = await supabase
+        .from("horses")
+        .select("*")
+        .eq("is_available", true)
+        .order("created_at", { ascending: false });
+
+      setHorses(data || []);
+      setLoading(false);
+    };
+
+    fetchHorses();
+  }, []);
 
   return (
-    <main className="flex flex-col items-center justify-center p-6 bg-white min-h-screen font-segoe">
-      <div className="bg-white dark:bg-black p-6 rounded-lg shadow-lg max-w-4xl w-full text-center font-segoe">
-        <h2 className="text-2xl font-bold text-black dark:text-white">
-          Наши лошади
-        </h2>
-        <div className="flex flex-col gap-6 mt-6">
+    <div className="container max-w-6xl mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6 text-center">Наши лошади</h1>
+      {loading ? (
+        <p className="text-center">Загрузка...</p>
+      ) : horses.length === 0 ? (
+        <p className="text-center text-gray-500">Лошади не найдены</p>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-6">
           {horses.map((horse) => (
-            <div
+            <Link
               key={horse.id}
-              className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md"
+              href={`/${locale}/horse/${horse.id}`}
+              className="block border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
             >
-              <Image
-                src={horse.image}
-                alt={horse.name}
-                width={300}
-                height={200}
-                className="rounded-lg"
-              />
-              <h3 className="text-lg font-bold text-black dark:text-white mt-2">
-                {horse.name}
-              </h3>
-              <div className="mt-4">
-                <iframe
-                  width="100%"
-                  height="200"
-                  src={horse.video}
-                  title={horse.name}
-                  frameBorder="0"
-                  allowFullScreen
-                  className="rounded-lg"
-                ></iframe>
+              {horse.photos?.[0] && (
+                <img
+                  loading="lazy"
+                  src={horse.photos[0]}
+                  alt={horse.name}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-4">
+                <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
+                <p className="text-sm text-gray-600 mb-1">
+                  {horse.breed} — {horse.age} лет
+                </p>
+                <p className="text-sm mb-2 line-clamp-2">{horse.description}</p>
+                <p className="text-green-700 font-bold">
+                  {horse.price.toLocaleString()} ₸
+                </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
-      </div>
-    </main>
+      )}
+    </div>
   );
 }
-
-export default HorsesPage;

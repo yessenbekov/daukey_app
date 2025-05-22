@@ -3,5 +3,12 @@
     "home": "Home",
     "horses": "Our Horses",
     "toggleTheme": "Toggle Theme"
+  },
+  "homePage": {
+    "writeToWpp": "Write to WhatsApp",
+    "writeToTG": "Write to Telegram",
+    "location": "Location",
+    "socialMedia": "Social Media",
+    "workTime": "10:00 – 20:00 => Friday - day off"
   }
 }

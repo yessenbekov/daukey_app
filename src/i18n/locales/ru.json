@@ -3,5 +3,12 @@
     "home": "Главная",
     "horses": "Наши лошади",
     "toggleTheme": "Сменить тему"
+  },
+  "homePage": {
+    "writeToWpp": "Написать на WhatsApp",
+    "writeToTG": "Написать в Telegram",
+    "location": "Местоположение",
+    "socialMedia": "Социальные сети",
+    "workTime": "10:00 – 20:00 => Пятница - выходной"
   }
 }

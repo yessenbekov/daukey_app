@@ -3,5 +3,12 @@
     "home": "Басты бет",
     "horses": "Біздің аттар",
     "toggleTheme": "Тақталарды өзгерту"
+  },
+  "homePage": {
+    "writeToWpp": "WhatsApp-қа жазу",
+    "writeToTG": "Telegram-ға жазу",
+    "location": "Орналасқан жері",
+    "socialMedia": "Әлеуметтік желілер",
+    "workTime": "10:00 – 20:00 => Жұма - демалыс күні"
   }
 }

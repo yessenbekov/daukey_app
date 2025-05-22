@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import Image from "next/image";
+import { Horse } from "@/models";
 
 export default function HorsesPage() {
-  const [horses, setHorses] = useState<any[]>([]);
+  const [horses, setHorses] = useState<Horse[]>([]);
   const [loading, setLoading] = useState(true);
   const { locale } = useParams();
 
@@ -41,7 +43,9 @@ export default function HorsesPage() {
               className="block border rounded-lg overflow-hidden shadow hover:shadow-lg transition"
             >
               {horse.photos?.[0] && (
-                <img
+                <Image
+                  width={300}
+                  height={200}
                   loading="lazy"
                   src={horse.photos[0]}
                   alt={horse.name}

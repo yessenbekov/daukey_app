@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -125,7 +126,9 @@ export default function HorseForm({
           <div className="grid grid-cols-2 gap-2 mt-2">
             {previews.map((src, idx) => (
               <div key={idx} className="relative">
-                <img
+                <Image
+                  width={300}
+                  height={200}
                   loading="lazy"
                   src={src}
                   alt={`preview-${idx}`}

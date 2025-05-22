@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { ThemeProvider } from "@/context/ThemeProvider";
 import "@/styles/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";

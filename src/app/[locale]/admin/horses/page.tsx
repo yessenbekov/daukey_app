@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Horse } from "@/models";
 
 export default function AdminHorsesPage() {
   const [form, setForm] = useState({
@@ -19,8 +20,8 @@ export default function AdminHorsesPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [videoLinks, setVideoLinks] = useState<string[]>([""]);
-  const [horses, setHorses] = useState<any[]>([]);
-  const [editingHorse, setEditingHorse] = useState<any | null>(null);
+  const [horses, setHorses] = useState<Horse[]>([]);
+  const [editingHorse, setEditingHorse] = useState<Horse | null>(null);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -29,6 +30,7 @@ export default function AdminHorsesPage() {
 
   useEffect(() => {
     fetchHorses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const fetchHorses = async () => {
@@ -73,7 +75,7 @@ export default function AdminHorsesPage() {
     e.preventDefault(); // <-- добавь это!
 
     setLoading(true);
-    let photoUrls: string[] = [];
+    const photoUrls: string[] = [];
 
     for (const file of files) {
       const ext = file.name.split(".").pop();
@@ -165,7 +167,7 @@ export default function AdminHorsesPage() {
     }
   };
 
-  const startEditing = (horse: any) => {
+  const startEditing = (horse: Horse) => {
     setEditingHorse(horse);
     setForm({
       name: horse.name,

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import { Dialog } from "@headlessui/react";
 import { X } from "lucide-react";
+import { Horse } from "@/models";
 
 function convertToEmbedUrl(url: string): string {
   if (url.includes("watch?v=")) {
@@ -22,7 +23,7 @@ function convertToEmbedUrl(url: string): string {
 
 export default function HorseDetailsPage() {
   const { id } = useParams();
-  const [horse, setHorse] = useState<any | null>(null);
+  const [horse, setHorse] = useState<Horse | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState(0);
@@ -92,7 +93,9 @@ export default function HorseDetailsPage() {
               <X size={24} />
             </button>
             {horse.photos?.[currentPhoto] && (
-              <img
+              <Image
+                width={300}
+                height={200}
                 loading="lazy"
                 src={horse.photos[currentPhoto]}
                 alt="Просмотр фото"

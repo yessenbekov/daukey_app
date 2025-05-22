@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 type Horse = {
@@ -21,7 +22,9 @@ export default function HorseCard({ horse, onEdit, onDelete }: Props) {
   return (
     <div className="border rounded-lg p-4 shadow bg-white">
       {horse.photos?.[0] && (
-        <img
+        <Image
+          width={300}
+          height={200}
           loading="lazy"
           src={horse.photos[0]}
           className="w-full h-40 object-cover rounded"

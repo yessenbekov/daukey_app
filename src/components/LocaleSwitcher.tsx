@@ -2,7 +2,6 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import Link from "next/link";
 
 const locales = ["en", "ru", "kk"];
 

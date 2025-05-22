@@ -41,7 +41,7 @@ export default function Home() {
           href="https://wa.me/77001234567"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-green-600 transition"
+          className="border-2 border-white flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-green-600 transition"
         >
           <div className="flex items-center gap-4">
             <img src="/icons/whatsapp.svg" alt="WhatsApp" className="w-8 h-8" />
@@ -57,7 +57,7 @@ export default function Home() {
           href="https://t.me/your_telegram_username"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-blue-600 transition"
+          className="border-2 border-white flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-blue-600 transition"
         >
           <div className="flex items-center gap-4">
             <img src="/icons/telegram.svg" alt="Telegram" className="w-8 h-8" />
@@ -71,7 +71,7 @@ export default function Home() {
       </div>
 
       <div className="mt-10">
-        <h2 className="text-xl font-semibold mb-2">{t("location")}</h2>
+        <h2 className="text-xl text-white font-semibold mb-2">{t("location")}</h2>
         <div className="flex items-center gap-4 mb-4 bg-gray-100 p-4 rounded-xl">
           <MapPin className="text-gray-600" />
           <div>
@@ -109,23 +109,6 @@ export default function Home() {
           </a>
         </div>
       </div>
-
-      {/* <div className="p-6 max-w-4xl w-full text-center">
-        <ProfileCard />
-        <Section title="О нас">
-          <p className="text-white">
-            Добро пожаловать в Daukey App — место, где встречаются традиции и
-            современные технологии. Мы создаем уникальное пространство для
-            ценителей конного спорта.
-          </p>
-        </Section>
-        <Section title="Наши лошади">
-          <p className="text-white">
-            В нашем каталоге представлены лучшие лошади, отобранные с особым
-            вниманием к качеству и происхождению.
-          </p>
-        </Section>
-      </div> */}
     </main>
   );
 }

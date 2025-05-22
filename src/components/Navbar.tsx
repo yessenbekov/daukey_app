@@ -9,19 +9,21 @@ export function Navbar() {
 
   return (
     <nav className="flex justify-between items-center p-4 bg-black shadow-md">
-      <div className="flex items-center gap-4">
-        <Image
-          loading="lazy"
-          src="/images/logo.svg"
-          alt="Daukey App"
-          width={40}
-          height={40}
-          className="rounded-full shadow-md"
-        />
-        <h1 className="text-2xl font-serif font-bold text-white tracking-wide">
-          Daukey App
-        </h1>
-      </div>
+      <Link href="/">
+        <div className="flex items-center gap-4">
+          <Image
+            loading="lazy"
+            src="/images/logo.svg"
+            alt="Daukey App"
+            width={40}
+            height={40}
+            className="rounded-full shadow-md"
+          />
+          <h1 className="text-xl font-serif font-bold text-white tracking-wide">
+            Daukey App
+          </h1>
+        </div>
+      </Link>
       <div className="flex gap-6 ml-auto">
         <Link href={`/${locale}`} className="text-white hover:underline">
           {t("home")} {/* Теперь используем короткий ключ */}

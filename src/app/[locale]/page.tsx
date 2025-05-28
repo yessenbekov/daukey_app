@@ -1,111 +1,123 @@
-import ProfileCard from "@/components/ProfileCard";
-import { Section } from "@/components/Section";
+"use client";
+
+import { socialLinks } from "@/utils/constants";
 import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { motion } from "framer-motion";
 
 export default function Home() {
-  const t = useTranslations("homePage"); // Указываем namespace
+  const t = useTranslations("homePage");
+
   return (
     <main
       className="flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/alone.jpeg')" }}
     >
-      <div className="p-6 max-w-4xl w-full text-center">
-        <h2 className="text-xl font-semibold mb-4">{t("socialMedia")}</h2>
-        <div className="flex justify-center gap-6">
-          <a
-            href="https://instagram.com/daukey_kokpar_club"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-2 border-white rounded-2xl p-6 hover:bg-red-50 transition"
-          >
-            <img
-              src="/icons/instagram.svg"
-              alt="instagram"
-              className="w-20 h-20"
-            />
-          </a>
-          <a
-            href="https://www.tiktok.com/@daukey.kokpar.club"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-2 border-white rounded-2xl p-6 hover:bg-red-50 transition"
-          >
-            <img src="/icons/tiktok.svg" alt="tiktok" className="w-20 h-20" />
-          </a>
+      <motion.div
+        className="p-6 max-w-4xl w-full text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2
+          className="text-xl font-semibold mt-15 mb-4 text-white"
+          style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
+        >
+          {t("socialMedia")}
+        </h2>
+        <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto mt-6">
+          {socialLinks.map(({ href, label, icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center bg-white/10 border border-transparent rounded-2xl p-4 shadow-md backdrop-blur-sm hover:scale-105 hover:ring-2 hover:ring-white/30 transition"
+            >
+              {icon}
+              <p className="text-white text-sm font-medium mt-2 min-h-[1.5rem] text-center">
+                {label}
+              </p>
+            </a>
+          ))}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="mt-8 space-y-4 w-90 max-w-4xl">
-        <a
-          href="https://wa.me/77001234567"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border-2 border-white flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-green-600 transition"
+      <motion.div
+        className="mt-10 px-4 w-full max-w-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        <h2
+          className="text-xl font-semibold mb-4 text-white text-center"
+          style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
         >
-          <div className="flex items-center gap-4">
-            <img src="/icons/whatsapp.svg" alt="WhatsApp" className="w-8 h-8" />
-            <div>
-              <p className="text-lg font-semibold">WhatsApp</p>
-              <p className="text-sm">{t("writeToWpp")}</p>
-            </div>
-          </div>
-          <span className="text-2xl">›</span>
-        </a>
+          {t("location")}
+        </h2>
 
-        <a
-          href="https://t.me/your_telegram_username"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border-2 border-white flex items-center justify-between px-6 py-4 text-white rounded-2xl shadow hover:bg-blue-600 transition"
-        >
-          <div className="flex items-center gap-4">
-            <img src="/icons/telegram.svg" alt="Telegram" className="w-8 h-8" />
-            <div>
-              <p className="text-lg font-semibold">Telegram</p>
-              <p className="text-sm">{t("writeToTG")}</p>
-            </div>
+        <div className="flex items-start gap-4 bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-md text-white">
+          <div className="mt-1">
+            <MapPin className="text-white" />
           </div>
-          <span className="text-2xl">›</span>
-        </a>
-      </div>
-
-      <div className="mt-10">
-        <h2 className="text-xl text-white font-semibold mb-2">{t("location")}</h2>
-        <div className="flex items-center gap-4 mb-4 bg-gray-100 p-4 rounded-xl">
-          <MapPin className="text-gray-600" />
-          <div>
-            <p className="font-semibold">
-              Almaty, Сагадат Нурмагамбетов, 230/1
+          <div className="space-y-1">
+            <p className="font-semibold text-base leading-tight">
+              Almaty, Сагадат Нұрмагамбетов, 230/1
             </p>
-            <p className="text-sm text-gray-500">{t("workTime")}</p>
+            <p className="text-sm text-white/80">🕒 10:00 – 20:00</p>
+            <p className="text-sm text-white/60 italic">
+              {t("workTime")} {/* например: Жұма – демалыс күні */}
+            </p>
           </div>
         </div>
-        <div className="space-y-3">
+
+        <div className="space-y-3 mt-5">
           <a
             href="https://go.2gis.com/Y45kg"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center bg-gray-100 px-4 py-3 rounded-xl hover:bg-gray-200"
+            className="flex items-center justify-between px-5 py-4 rounded-2xl bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-md text-white transition group"
           >
-            <span className="flex items-center gap-2">
-              <img src="/icons/2gis.svg" alt="2gis" className="w-35 h-10" />
+            <img src="/icons/2gis.svg" alt="2GIS" className="h-8" />
+            <span className="text-white text-xl transform transition-transform group-hover:translate-x-1">
+              ›
             </span>
           </a>
+
           <a
             href="https://maps.app.goo.gl/yDgemn1svCj2w9mx6"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 flex items-center justify-center bg-gray-100 px-4 py-3 rounded-xl hover:bg-gray-200"
+            className="flex items-center justify-between px-5 py-4 rounded-2xl bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-md text-white transition group"
           >
-            <span className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <img
                 src="/icons/google-maps.svg"
-                alt="google-maps"
-                className="w-14 h-14"
+                alt="Google Maps"
+                className="w-10 h-10"
               />
-              <span>Google Maps</span>
+              <span className="text-white text-base">Google Maps</span>
+            </div>
+            <span className="text-white text-xl transform transition-transform group-hover:translate-x-1">
+              ›
             </span>
+          </a>
+        </div>
+      </motion.div>
+
+      <div className="mt-10 mb-5 px-4 w-full max-w-2xl">
+        <div className="bg-white/10 backdrop-blur-md text-white text-center p-6 rounded-2xl shadow-md">
+          <h3 className="text-xl font-semibold mb-2">Хочешь узнать больше?</h3>
+          <p className="mb-4 text-sm text-white/80">
+            Свяжись с нами и мы поможем подобрать подходящую лошадь.
+          </p>
+          <a
+            href="https://wa.me/77001234567"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition"
+          >
+            Написать в WhatsApp
           </a>
         </div>
       </div>

@@ -19,14 +19,6 @@ export function Navbar() {
 
   const handleNavClick = () => setMenuOpen(false);
 
-  const navbarClasses = isHome
-    ? "bg-black/60 text-white"
-    : "bg-white text-black border-b border-gray-200";
-
-  const mobileMenuClasses = isHome
-    ? "bg-black/80 text-white"
-    : "bg-white text-black border-t border-gray-200";
-
   const navItemClass =
     "flex items-center gap-1 text-sm transition-all duration-200";
 
@@ -80,7 +72,7 @@ export function Navbar() {
             </span>
           </Link>
 
-           <Link href={`/${locale}/services`} className={navItemClass}>
+          <Link href={`/${locale}/services`} className={navItemClass}>
             {isServices && <span className="text-primary">•</span>}
             <span
               className={`${

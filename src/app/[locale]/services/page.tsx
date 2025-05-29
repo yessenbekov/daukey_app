@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  MountainIcon,
-  TicketIcon,
-  CalendarIcon,
-  HouseIcon,
-  MessageCircleIcon,
-} from "lucide-react";
+import { CalendarIcon, MessageCircleIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 

@@ -2,7 +2,8 @@
   "navbar": {
     "home": "Басты бет",
     "horses": "Біздің аттар",
-    "toggleTheme": "Тақталарды өзгерту"
+    "toggleTheme": "Тақталарды өзгерту",
+    "services": "Қызметтер"
   },
   "homePage": {
     "writeToWpp": "WhatsApp-қа жазу",
@@ -32,5 +33,27 @@
       "description": "Сипаттама",
       "ageWithCount": "жаста"
     }
+  },
+  "servicesPage": {
+    "title": "Қызметтер мен бағалар",
+    "subtitle": "Сізге ең қолайлы қызметті таңдаңыз",
+    "horseRiding": "Атпен жүру",
+    "clubTerritory": "Клуб аумағында жүру",
+    "ridingInMountains": "Тауда серуендеу",
+    "dependsOnRider": "Жүргізушінің тәжірибесіне байланысты",
+    "kokpar": "Кокпар",
+    "oneTimeVisit": "Бір рет бару",
+    "monthly": "1 айлық жазылым",
+    "halfYear": "Жарты жылдық жазылым",
+    "yearly": "1 жылдық жазылым",
+    "minutes": "минут",
+    "5timePerMonth": "Айына 5 рет",
+    "4timePerMonth": "Айына 4 рет",
+    "halfYearDescription": "26 рет 8500 KZT",
+    "yearlyDescription": "52 рет 7500 KZT",
+    "readyForRidingOrTraining": "Атқа мінуге немесе жаттығуға дайынсызба?",
+    "contactUsForMoreInfo": "Көбірек ақпарат алу үшін бізбен хабарласыңыз",
+    "writeWhatsapp": "WhatsApp-қа жазу",
+    "askedQuestions": "Жиі қойылатын сұрақтар"
   }
 }

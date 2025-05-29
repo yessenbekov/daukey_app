@@ -3,19 +3,43 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { LocaleSwitcher } from "./LocaleSwitcher";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { LocaleSwitcher } from "./LocaleSwitcher";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
   const t = useTranslations("navbar");
   const locale = useLocale();
+  const pathname = usePathname();
+  const isHome = pathname === `/${locale}`;
+  const isHorses = pathname.startsWith(`/${locale}/horses`);
+  const isServices = pathname.startsWith(`/${locale}/services`);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleNavClick = () => setMenuOpen(false);
+
+  const navbarClasses = isHome
+    ? "bg-black/60 text-white"
+    : "bg-white text-black border-b border-gray-200";
+
+  const mobileMenuClasses = isHome
+    ? "bg-black/80 text-white"
+    : "bg-white text-black border-t border-gray-200";
+
+  const navItemClass =
+    "flex items-center gap-1 text-sm transition-all duration-200";
+
   return (
-    <nav className="bg-gradient-to-b from-black/70 via-black/40 to-transparent text-white shadow-md backdrop-blur-md fixed top-0 w-full z-50">
+    <nav
+      className={`fixed top-0 w-full z-50 backdrop-blur-md shadow-sm bg-black/60 text-white`}
+    >
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <Link href={`/${locale}`} className="flex items-center gap-3">
+        <Link
+          href={`/${locale}`}
+          className="flex items-center gap-3"
+          onClick={handleNavClick}
+        >
           <Image
             src="/images/logo.svg"
             alt="Daukey App"
@@ -30,16 +54,49 @@ export function Navbar() {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6 ml-auto">
-          <Link href={`/${locale}`} className="hover:underline">
-            {t("home")}
+          <Link href={`/${locale}`} className={navItemClass}>
+            {isHome && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isHome
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:opacity-70"
+              }`}
+            >
+              {t("home")}
+            </span>
           </Link>
-          <Link href={`/${locale}/horses`} className="hover:underline">
-            {t("horses")}
+
+          <Link href={`/${locale}/horses`} className={navItemClass}>
+            {isHorses && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isHorses
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:opacity-70"
+              }`}
+            >
+              {t("horses")}
+            </span>
           </Link>
+
+           <Link href={`/${locale}/services`} className={navItemClass}>
+            {isServices && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isServices
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:opacity-70"
+              }`}
+            >
+              {t("services")}
+            </span>
+          </Link>
+
           <LocaleSwitcher />
         </div>
 
-        {/* Mobile */}
+        {/* Mobile toggle */}
         <button
           className="md:hidden ml-auto"
           onClick={() => setMenuOpen((prev) => !prev)}
@@ -51,13 +108,58 @@ export function Navbar() {
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2 bg-black/70 backdrop-blur-md">
-          <Link href={`/${locale}`} className="block hover:underline">
-            {t("home")}
+        <div className={`md:hidden px-4 pb-4 space-y-2 bg-black/80 text-white`}>
+          <Link
+            href={`/${locale}`}
+            onClick={handleNavClick}
+            className={`${navItemClass} py-1`}
+          >
+            {isHome && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isHome
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:underline"
+              }`}
+            >
+              {t("home")}
+            </span>
           </Link>
-          <Link href={`/${locale}/horses`} className="block hover:underline">
-            {t("horses")}
+
+          <Link
+            href={`/${locale}/horses`}
+            onClick={handleNavClick}
+            className={`${navItemClass} py-1`}
+          >
+            {isHorses && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isHorses
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:underline"
+              }`}
+            >
+              {t("horses")}
+            </span>
           </Link>
+
+          <Link
+            href={`/${locale}/services`}
+            onClick={handleNavClick}
+            className={`${navItemClass} py-1`}
+          >
+            {isServices && <span className="text-primary">•</span>}
+            <span
+              className={`${
+                isServices
+                  ? "font-semibold underline underline-offset-4"
+                  : "hover:underline"
+              }`}
+            >
+              {t("services")}
+            </span>
+          </Link>
+
           <LocaleSwitcher />
         </div>
       )}

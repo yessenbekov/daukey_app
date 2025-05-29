@@ -2,7 +2,8 @@
   "navbar": {
     "home": "Главная",
     "horses": "Наши лошади",
-    "toggleTheme": "Сменить тему"
+    "toggleTheme": "Сменить тему",
+    "services": "Услуги"
   },
   "homePage": {
     "writeToWpp": "Написать на WhatsApp",
@@ -32,5 +33,27 @@
       "description": "Описание",
       "ageWithCount": "лет"
     }
+  },
+  "servicesPage": {
+    "title": "Услуги и цены",
+    "subtitle": "Выберите услугу, которая вам подходит",
+    "horseRiding": "Верховая езда",
+    "clubTerritory": "Верховая езда на территории клуба",
+    "ridingInMountains": "Верховая езда в горах",
+    "dependsOnRider": "Зависит от опыта всадника",
+    "kokpar": "Кокпар",
+    "oneTimeVisit": "Одноразовый визит",
+    "monthly": "Ежемесячная подписка",
+    "halfYear": "Полугодовая подписка",
+    "yearly": "Годовая подписка",
+    "minutes": "минут",
+    "5timePerMonth": "5 раз в месяц",
+    "4timePerMonth": "4 раза в месяц",
+    "halfYearDescription": "26 раза по 8500 KZT",
+    "yearlyDescription": "52 раза по 7500 KZT",
+    "readyForRidingOrTraining": "Готовы к верховой езде или тренировке?",
+    "contactUsForMoreInfo": "Свяжитесь с нами для получения дополнительной информации",
+    "writeWhatsapp": "Написать в WhatsApp",
+    "askedQuestions": "Часто задаваемые вопросы"
   }
 }

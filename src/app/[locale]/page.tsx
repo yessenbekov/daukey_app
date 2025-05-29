@@ -4,6 +4,7 @@ import { socialLinks } from "@/utils/constants";
 import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function Home() {
   const t = useTranslations("homePage");
@@ -121,6 +122,7 @@ export default function Home() {
           </a>
         </div>
       </div>
+      <InstallPrompt />
     </main>
   );
 }

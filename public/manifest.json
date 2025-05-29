@@ -1,6 +1,6 @@
 {
   "name": "Daukey App",
-  "short_name": "Daukey",
+  "short_name": "Daukey App",
   "description": "Продажа лошадей онлайн",
   "start_url": "/",
   "display": "standalone",

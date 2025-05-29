@@ -43,64 +43,108 @@ export default function HorseForm({
   return (
     <form
       onSubmit={onSubmit}
-      className={`space-y-4 ${
-        isEdit ? "bg-yellow-50" : "bg-white"
-      } p-6 rounded-xl shadow-md mb-10`}
+      className="bg-white p-6 rounded-xl shadow-md space-y-6 border border-gray-200"
     >
       <h2 className="text-xl font-semibold">
         {isEdit ? "Редактировать лошадь" : "Добавить лошадь"}
       </h2>
-      <input
-        name="name"
-        placeholder="Имя"
-        className="w-full p-2 border rounded"
-        value={form.name}
-        onChange={onChange}
-      />
-      <input
-        name="age"
-        placeholder="Возраст"
-        type="number"
-        className="w-full p-2 border rounded"
-        value={form.age}
-        onChange={onChange}
-      />
-      <input
-        name="breed"
-        placeholder="Порода"
-        className="w-full p-2 border rounded"
-        value={form.breed}
-        onChange={onChange}
-      />
+
+      {/* Базовая информация */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input
+          name="name"
+          placeholder="Имя"
+          className="p-2 border rounded w-full"
+          value={form.name}
+          onChange={onChange}
+        />
+        <input
+          name="age"
+          placeholder="Возраст"
+          type="number"
+          className="p-2 border rounded w-full"
+          value={form.age}
+          onChange={onChange}
+        />
+        <input
+          name="breed"
+          placeholder="Порода"
+          className="p-2 border rounded w-full"
+          value={form.breed}
+          onChange={onChange}
+        />
+        <input
+          name="price"
+          placeholder="Цена (₸)"
+          type="number"
+          className="p-2 border rounded w-full"
+          value={form.price}
+          onChange={onChange}
+        />
+      </div>
+
+      {/* Описание */}
       <textarea
         name="description"
         placeholder="Описание"
         className="w-full p-2 border rounded"
         value={form.description}
         onChange={onChange}
+        rows={3}
       />
-      <input
-        name="price"
-        placeholder="Цена (₸)"
-        type="number"
-        className="w-full p-2 border rounded"
-        value={form.price}
-        onChange={onChange}
-      />
-      <div className="space-y-2">
-        <p className="text-sm text-gray-600">Ссылки на видео</p>
+
+      {/* Фото */}
+      <div>
+        <label className="block font-medium mb-2">Фотографии</label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={onFileChange}
+          className="w-full p-2 border rounded"
+        />
+        {previews.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">
+            {previews.map((src, idx) => (
+              <div key={idx} className="relative group">
+                <Image
+                  width={300}
+                  height={200}
+                  loading="lazy"
+                  src={src}
+                  alt={`preview-${idx}`}
+                  className="h-32 w-full object-cover rounded border"
+                />
+                <button
+                  type="button"
+                  onClick={() => onPreviewRemove(idx)}
+                  className="absolute top-1 right-1 bg-white/80 rounded-full px-2 text-sm text-red-600 opacity-0 group-hover:opacity-100 transition"
+                  title="Удалить"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Видео */}
+      <div>
+        <label className="block font-medium mb-2">Ссылки на видео</label>
         {videoLinks.map((link, i) => (
-          <div key={i} className="flex gap-2">
+          <div key={i} className="flex gap-2 mb-2">
             <input
               value={link}
               onChange={(e) => onVideoChange(i, e.target.value)}
-              placeholder={`Видео ${i + 1}`}
+              placeholder={`https://youtube.com/...`}
               className="w-full p-2 border rounded"
             />
             <button
               type="button"
               onClick={() => onVideoRemove(i)}
               className="text-sm text-red-600"
+              title="Удалить видео"
             >
               ✕
             </button>
@@ -114,60 +158,34 @@ export default function HorseForm({
           + Добавить ещё видео
         </button>
       </div>
-      <div>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onFileChange}
-          multiple
-          className="w-full p-2 border rounded"
-        />
-        {previews.length > 0 && (
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            {previews.map((src, idx) => (
-              <div key={idx} className="relative">
-                <Image
-                  width={300}
-                  height={200}
-                  loading="lazy"
-                  src={src}
-                  alt={`preview-${idx}`}
-                  className="h-32 w-full object-cover rounded border"
-                />
-                <button
-                  type="button"
-                  onClick={() => onPreviewRemove(idx)}
-                  className="absolute top-1 right-1 bg-white/70 rounded-full px-2 text-sm text-red-600"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
+
+      {/* Кнопки */}
+      <div className="flex justify-between items-center pt-4 flex-wrap gap-3">
+        {onCancel && isEdit && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="text-sm text-gray-600 underline"
+          >
+            Отменить
+          </button>
         )}
-      </div>
-      <button
-        type="submit"
-        className="bg-black text-white px-4 py-2 rounded"
-        disabled={loading}
-      >
-        {loading
-          ? isEdit
-            ? "Сохраняем..."
-            : "Добавляем..."
-          : isEdit
-          ? "Сохранить изменения"
-          : "Добавить"}
-      </button>
-      {isEdit && onCancel && (
         <button
-          type="button"
-          onClick={onCancel}
-          className="ml-4 text-sm text-gray-600 underline"
+          type="submit"
+          disabled={loading}
+          className={`px-6 py-2 rounded text-white ${
+            loading ? "bg-gray-500" : "bg-black hover:bg-gray-900"
+          }`}
         >
-          Отменить
+          {loading
+            ? isEdit
+              ? "Сохраняем..."
+              : "Добавляем..."
+            : isEdit
+            ? "Сохранить изменения"
+            : "Добавить"}
         </button>
-      )}
+      </div>
     </form>
   );
 }

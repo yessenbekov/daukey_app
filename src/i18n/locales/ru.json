@@ -10,5 +10,27 @@
     "location": "Местоположение",
     "socialMedia": "Социальные сети",
     "workTime": "10:00 – 20:00 => Пятница - выходной"
+  },
+  "horsesPage": {
+    "title": "Наши лошади",
+    "subtitle": "Найдите своего идеального спутника по верховой езде",
+    "noHorses": "В данный момент нет доступных лошадей.",
+    "loading": "Загрузка...",
+    "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",
+    "sortBy": "Сортировать по",
+    "newest": "Новейшие",
+    "priceAsc": "Цена: от низкой к высокой",
+    "priceDesc": "Цена: от высокой к низкой",
+    "ageAsc": "Возраст: от молодого к старому",
+    "ageDesc": "Возраст: от старого к молодому",
+    "breed": "Порода",
+    "allBreeds": "Все породы",
+    "horseDetails": {
+      "name": "Имя",
+      "age": "Возраст",
+      "breed": "Порода",
+      "description": "Описание",
+      "ageWithCount": "лет"
+    }
   }
 }

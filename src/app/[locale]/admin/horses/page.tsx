@@ -188,7 +188,7 @@ export default function AdminHorsesPage() {
         placeholder="Поиск по имени"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 p-2 border rounded w-full"
+        className="mt-15 mb-4 p-2 border rounded w-full"
       />
 
       <button

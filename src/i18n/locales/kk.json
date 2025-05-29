@@ -10,5 +10,27 @@
     "location": "Орналасқан жері",
     "socialMedia": "Әлеуметтік желілер",
     "workTime": "10:00 – 20:00 => Жұма - демалыс күні"
+  },
+  "horsesPage": {
+    "title": "Біздің аттар",
+    "subtitle": "Сіздің мінсіз ат серігіңізді табыңыз",
+    "noHorses": "Қазіргі уақытта аттар жоқ.",
+    "loading": "Жүктелуде...",
+    "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",
+    "sortBy": "Сұрыптау",
+    "newest": "Ең жаңа",
+    "priceAsc": "Бағасы: Төменнен Жоғарыға",
+    "priceDesc": "Бағасы: Жоғарыдан Төменге",
+    "ageAsc": "Жасы: Жасқа дейін",
+    "ageDesc": "Жасы: Ересекке дейін",
+    "breed": "Тұқым",
+    "allBreeds": "Барлық тұқымдар",
+    "horseDetails": {
+      "name": "Аты",
+      "age": "Жасы",
+      "breed": "Тұқымы",
+      "description": "Сипаттама",
+      "ageWithCount": "жаста"
+    }
   }
 }

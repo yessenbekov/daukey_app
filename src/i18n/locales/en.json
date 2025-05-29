@@ -10,5 +10,27 @@
     "location": "Location",
     "socialMedia": "Social Media",
     "workTime": "10:00 – 20:00 => Friday - day off"
+  },
+  "horsesPage": {
+    "loading": "Loading...",
+    "noHorses": "No horses available at the moment.",
+    "title": "Our Horses",
+    "subtitle": "Find your perfect horse companion",
+    "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",
+    "sortBy": "Sort by",
+    "newest": "Newest",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
+    "ageAsc": "Age: Young to Old",
+    "ageDesc": "Age: Old to Young",
+    "breed": "Breed",
+    "allBreeds": "All breeds",
+    "horseDetails": {
+      "name": "Name",
+      "age": "Age",
+      "breed": "Breed",
+      "description": "Description",
+      "ageWithCount": "years old"
+    }
   }
 }

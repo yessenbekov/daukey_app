@@ -46,3 +46,7 @@ export const socialLinks = [
     bg: "bg-blue-500",
   },
 ];
+
+export const SKELETON_COUNT = 6;
+
+export const ITEMS_PER_PAGE = 6;

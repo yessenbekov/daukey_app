@@ -1,16 +1,5 @@
+import { Horse } from "@/models";
 import Image from "next/image";
-import React from "react";
-
-type Horse = {
-  id: string;
-  name: string;
-  age: number;
-  breed: string;
-  description: string;
-  photos: string[];
-  videos: string[];
-  price: number;
-};
 
 type Props = {
   horse: Horse;
@@ -20,50 +9,46 @@ type Props = {
 
 export default function HorseCard({ horse, onEdit, onDelete }: Props) {
   return (
-    <div className="border rounded-lg p-4 shadow bg-white">
+    <div className="border rounded-xl overflow-hidden shadow-md bg-white relative">
       {horse.photos?.[0] && (
-        <Image
-          width={300}
-          height={200}
-          loading="lazy"
-          src={horse.photos[0]}
-          className="w-full h-40 object-cover rounded"
-          alt={horse.name}
-        />
-      )}
-      <h3 className="font-bold mt-2 text-lg">{horse.name}</h3>
-      <p className="text-sm text-gray-600">
-        {horse.breed} — {horse.age} лет
-      </p>
-      <p className="text-sm mt-1">{horse.description}</p>
-      <p className="text-green-700 font-bold mt-2">
-        {horse.price.toLocaleString()} ₸
-      </p>
-      {horse.videos?.length > 0 && (
-        <div className="mt-2 space-y-2">
-          {horse.videos.map((url, idx) => (
-            <iframe
-              loading="lazy"
-              key={idx}
-              src={url}
-              className="w-full h-48 rounded"
-              allowFullScreen
-            />
-          ))}
+        <div className="relative aspect-video">
+          <Image
+            src={horse.photos[0]}
+            alt={horse.name}
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
         </div>
       )}
-      <button
-        onClick={() => onEdit(horse)}
-        className="mt-3 text-blue-600 hover:underline text-sm"
-      >
-        Редактировать
-      </button>
-      <button
-        onClick={() => onDelete(horse.id)}
-        className="ml-3 text-red-600 hover:underline text-sm"
-      >
-        Удалить
-      </button>
+      <div className="p-4 space-y-1">
+        <h2 className="text-lg font-bold">{horse.name}</h2>
+        <p className="text-sm text-gray-600">
+          {horse.breed} — {horse.age} лет
+        </p>
+        <p className="text-green-700 font-semibold">
+          {horse?.price?.toLocaleString("ru-RU")} ₸
+        </p>
+        {horse.description && (
+          <p className="text-xs text-gray-500 line-clamp-2">
+            {horse.description}
+          </p>
+        )}
+      </div>
+      <div className="absolute top-2 right-2 flex gap-2">
+        <button
+          onClick={() => onEdit(horse)}
+          className="bg-white border rounded px-2 py-1 text-xs hover:bg-gray-100"
+        >
+          ✏️
+        </button>
+        <button
+          onClick={() => onDelete(horse.id)}
+          className="bg-white border rounded px-2 py-1 text-xs hover:bg-gray-100 text-red-500"
+        >
+          🗑
+        </button>
+      </div>
     </div>
   );
 }

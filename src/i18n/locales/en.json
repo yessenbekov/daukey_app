@@ -10,7 +10,9 @@
     "writeToTG": "Write to Telegram",
     "location": "Location",
     "socialMedia": "Social Media",
-    "workTime": "10:00 – 20:00 => Friday - day off"
+    "workTime": "10:00 – 20:00 => Friday - day off",
+    "wannaKnowMore": "Wanna know more?",
+    "contactUsForMoreInfo": "Contact us and we will help you choose the perfect horse companion."
   },
   "horsesPage": {
     "loading": "Loading...",

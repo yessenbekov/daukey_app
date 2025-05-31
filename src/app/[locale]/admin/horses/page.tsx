@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Horse } from "@/models";
+import { ITEMS_PER_PAGE } from "@/utils/constants";
 
 export default function AdminHorsesPage() {
   const [form, setForm] = useState({
@@ -25,22 +26,30 @@ export default function AdminHorsesPage() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const router = useRouter();
 
   useEffect(() => {
     fetchHorses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [search, page]);
 
   const fetchHorses = async () => {
-    const query = supabase
+    const from = (page - 1) * ITEMS_PER_PAGE;
+    const to = from + ITEMS_PER_PAGE - 1;
+
+    let query = supabase
       .from("horses")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (search) query.ilike("name", `%${search}%`);
-    const { data } = await query;
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (search) query = query.ilike("name", `%${search}%`);
+
+    const { data, count } = await query;
     setHorses(data || []);
+    if (count !== null) setTotalPages(Math.ceil(count / ITEMS_PER_PAGE));
   };
 
   const handleChange = (
@@ -72,7 +81,7 @@ export default function AdminHorsesPage() {
   };
 
   const handleAddHorse = async (e: React.FormEvent) => {
-    e.preventDefault(); // <-- добавь это!
+    e.preventDefault();
 
     setLoading(true);
     const photoUrls: string[] = [];
@@ -112,7 +121,7 @@ export default function AdminHorsesPage() {
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault(); // <-- добавь это!
+    e.preventDefault();
     if (!editingHorse) return;
     setLoading(true);
     let photoUrls = editingHorse.photos || [];
@@ -235,6 +244,26 @@ export default function AdminHorsesPage() {
             onDelete={handleDelete}
           />
         ))}
+      </div>
+
+      <div className="flex justify-center mt-6 gap-4">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Назад
+        </button>
+        <span className="px-4 py-2 text-sm font-medium text-gray-700">
+          Страница {page} из {totalPages}
+        </span>
+        <button
+          disabled={page >= totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          Вперед
+        </button>
       </div>
     </div>
   );

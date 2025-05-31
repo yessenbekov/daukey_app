@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { SquarePlus } from "lucide-react";
@@ -12,12 +12,28 @@ function isIOS() {
   );
 }
 
+let manualPromptTrigger: (() => void) | null = null;
+
+export function useInstallPrompt() {
+  return {
+    showManualPrompt: () => {
+      if (manualPromptTrigger) {
+        console.log("Manual prompt triggered");
+        manualPromptTrigger();
+      }
+    },
+  };
+}
+
 export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<null | Event>(null);
   const [showInstall, setShowInstall] = useState(false);
   const [showIosPrompt, setShowIosPrompt] = useState(false);
 
   useEffect(() => {
+    const dismissed = localStorage.getItem("installPromptDismissed");
+    if (dismissed === "true") return;
+
     if (isIOS()) {
       setTimeout(() => {
         setShowIosPrompt(true);
@@ -38,6 +54,24 @@ export default function InstallPrompt() {
       window.removeEventListener("beforeinstallprompt", handler as any);
   }, []);
 
+  const triggerPrompt = useCallback(() => {
+    const dismissed = localStorage.getItem("installPromptDismissed");
+    if (dismissed === "true") return;
+
+    if (isIOS()) {
+      setShowIosPrompt(true);
+    } else if (deferredPrompt) {
+      setShowInstall(true);
+    }
+  }, [deferredPrompt]);
+
+  useEffect(() => {
+    manualPromptTrigger = triggerPrompt;
+    return () => {
+      manualPromptTrigger = null;
+    };
+  }, [triggerPrompt]);
+
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
@@ -53,14 +87,17 @@ export default function InstallPrompt() {
 
     setDeferredPrompt(null);
     setShowInstall(false);
+    localStorage.setItem("installPromptDismissed", "true");
   };
 
   const handleDismissIosPrompt = () => {
     setShowIosPrompt(false);
+    localStorage.setItem("installPromptDismissed", "true");
   };
 
   const handleDismissAndroidPrompt = () => {
     setShowInstall(false);
+    localStorage.setItem("installPromptDismissed", "true");
   };
 
   return (

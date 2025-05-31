@@ -5,9 +5,11 @@ import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import InstallPrompt from "@/components/InstallPrompt";
+import { useInstallPrompt } from "@/components/InstallPrompt";
 
 export default function Home() {
   const t = useTranslations("homePage");
+  const { showManualPrompt } = useInstallPrompt();
 
   return (
     <main
@@ -89,7 +91,7 @@ export default function Home() {
             href="https://maps.app.goo.gl/yDgemn1svCj2w9mx6"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between px-5 py-4 rounded-2xl bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-md text-white transition group"
+            className="mt-5 flex items-center justify-between px-5 py-4 rounded-2xl bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-md text-white transition group"
           >
             <div className="flex items-center gap-3">
               <img
@@ -108,9 +110,9 @@ export default function Home() {
 
       <div className="mt-10 mb-5 px-4 w-full max-w-2xl">
         <div className="bg-white/10 backdrop-blur-md text-white text-center p-6 rounded-2xl shadow-md">
-          <h3 className="text-xl font-semibold mb-2">Хочешь узнать больше?</h3>
+          <h3 className="text-xl font-semibold mb-2">{t("wannaKnowMore")}</h3>
           <p className="mb-4 text-sm text-white/80">
-            Свяжись с нами и мы поможем подобрать подходящую лошадь.
+            {t("contactUsForMoreInfo")}
           </p>
           <a
             href="https://wa.me/77001234567"
@@ -118,11 +120,23 @@ export default function Home() {
             rel="noopener noreferrer"
             className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition"
           >
-            Написать в WhatsApp
+            {t("writeToWpp")}
           </a>
         </div>
       </div>
+
       <InstallPrompt />
+      <footer className="text-center text-xs text-white/60 mt-8 pb-6">
+        © 2025 | Developed by{" "}
+        <a
+          href="https://instagram.com/esenbekov.t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-white"
+        >
+          Talgat Yessenbekov
+        </a>
+      </footer>
     </main>
   );
 }

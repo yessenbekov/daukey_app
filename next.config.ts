@@ -1,8 +1,10 @@
+import withPWA from "next-pwa";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-/** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV === "development";
+
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -12,8 +14,7 @@ const nextConfig = {
   },
   experimental: {},
   images: {
-    domains: ["luxikyclvakgjtcawupf.supabase.co", "url.com",],
-    
+    domains: ["luxikyclvakgjtcawupf.supabase.co", "url.com"],
   },
   async headers() {
     return [
@@ -30,4 +31,12 @@ const nextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+// Оборачиваем только в продакшене
+const withPWAConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: isDev, // 💥 отключает PWA в dev
+});
+
+export default withNextIntl(withPWAConfig(nextConfig));

@@ -57,5 +57,26 @@
     "contactUsForMoreInfo": "Көбірек ақпарат алу үшін бізбен хабарласыңыз",
     "writeWhatsapp": "WhatsApp-қа жазу",
     "askedQuestions": "Жиі қойылатын сұрақтар"
+  },
+  "horseDetailsPage": {
+    "loading": "Жүктелуде...",
+    "notFound": "Жылқы табылмады",
+    "backToList": "Тізімге оралу",
+    "copyLink": "Сілтемені көшіру",
+    "copied": "Сілтеме көшірілді!",
+    "shareWhatsApp": "WhatsApp арқылы бөлісу",
+    "status": {
+      "available": "Қол жетімді",
+      "sold": "Сатылды"
+    },
+    "breed": "Тұқымы",
+    "age": "Жасы",
+    "years": "жас",
+    "price": "Бағасы",
+    "description": "Сипаттама",
+    "videos": "Бейне",
+    "prevPhoto": "Алдыңғы",
+    "nextPhoto": "Келесі",
+    "contact": "Жылқы жайлы хабарласу"
   }
 }

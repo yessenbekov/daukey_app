@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
-import { ITEMS_PER_PAGE, SKELETON_COUNT } from "@/utils/constants";
+import { ITEMS_PER_PAGE, SKELETON_COUNT, whatsAppNumber } from "@/utils/constants";
 import { ClipboardCopy, Send, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -169,7 +169,7 @@ export default function HorsesPage() {
             {currentHorses.map((horse) => (
               <div
                 key={horse.id}
-                className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                className="relative border rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
               >
                 <Link href={`/${locale}/horse/${horse.id}`} className="block">
                   <div className="relative aspect-video w-full">
@@ -198,52 +198,51 @@ export default function HorsesPage() {
                   </div>
                 </Link>
 
-                {/* Кнопка поделиться — вне <Link /> */}
-                <div className="px-4 pb-4 relative">
-                  <div className="flex justify-end relative">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenShareId(
-                          openShareId === horse.id ? null : horse.id
-                        )
-                      }
-                      className="text-gray-500 hover:text-black transition active:scale-90"
-                      title="Поделиться"
-                    >
-                      <Share2 size={18} />
-                    </button>
+                {/* Share button & popover */}
+                <div className="absolute top-2 right-2 z-40">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenShareId(openShareId === horse.id ? null : horse.id)
+                    }
+                    className="text-gray-500 hover:text-black transition active:scale-90"
+                    title="Поделиться"
+                  >
+                    <Share2 size={18} />
+                  </button>
 
-                    {openShareId === horse.id && (
-                      <div ref={shareMenuRef}>
-                        <div className="absolute top-full mt-2 right-0 bg-white border shadow-md rounded-lg w-52 z-50">
-                          <button
-                            onClick={() => {
-                              const url = `${window.location.origin}/${locale}/horse/${horse.id}`;
-                              navigator.clipboard.writeText(url);
-                              toast.success("Ссылка скопирована!");
-                              setOpenShareId(null);
-                            }}
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
-                          >
-                            <ClipboardCopy size={16} /> Скопировать ссылку
-                          </button>
+                  {openShareId === horse.id && (
+                    <div className="absolute bottom-full mb-2 right-0 z-50">
+                      <div className="relative bg-white border shadow-md rounded-lg w-56">
+                        {/* стрелочка */}
+                        <div className="absolute bottom-[-6px] right-4 w-3 h-3 bg-white border-l border-b rotate-45 z-[-1]" />
 
-                          <a
-                            href={`https://wa.me/?text=${encodeURIComponent(
-                              `${horse.name} — ${window.location.origin}/${locale}/horse/${horse.id}`
-                            )}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
-                            onClick={() => setOpenShareId(null)}
-                          >
-                            <Send size={16} /> Поделиться в WhatsApp
-                          </a>
-                        </div>
+                        <button
+                          onClick={() => {
+                            const url = `${window.location.origin}/${locale}/horse/${horse.id}`;
+                            navigator.clipboard.writeText(url);
+                            toast.success("Ссылка скопирована!");
+                            setOpenShareId(null);
+                          }}
+                          className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
+                        >
+                          <ClipboardCopy size={16} /> Скопировать ссылку
+                        </button>
+
+                        <a
+                          href={`https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(
+                            `${horse.name} — ${window.location.origin}/${locale}/horse/${horse.id}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
+                          onClick={() => setOpenShareId(null)}
+                        >
+                          <Send size={16} /> Поделиться в WhatsApp
+                        </a>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -1,4 +1,7 @@
 import React from "react";
+export const whatsAppNumber = "+77472096909";
+export const SKELETON_COUNT = 6;
+export const ITEMS_PER_PAGE = 6;
 
 export const socialLinks = [
   {
@@ -22,7 +25,7 @@ export const socialLinks = [
     bg: "bg-black",
   },
   {
-    href: "https://wa.me/77001112233",
+    href: `https://wa.me/${whatsAppNumber}`,
     label: "WhatsApp",
     icon: (
       <img
@@ -34,7 +37,7 @@ export const socialLinks = [
     bg: "bg-green-500",
   },
   {
-    href: "https://t.me/your_channel",
+    href: "https://t.me/daukey_kokpar_club",
     label: "Telegram",
     icon: (
       <img
@@ -46,7 +49,3 @@ export const socialLinks = [
     bg: "bg-blue-500",
   },
 ];
-
-export const SKELETON_COUNT = 6;
-
-export const ITEMS_PER_PAGE = 6;

@@ -57,5 +57,26 @@
     "contactUsForMoreInfo": "Contact us for more information",
     "writeWhatsapp": "Write to WhatsApp",
     "askedQuestions": "Frequently Asked Questions"
+  },
+  "horseDetailsPage": {
+    "loading": "Loading...",
+    "notFound": "Horse not found",
+    "backToList": "Back to list",
+    "copyLink": "Copy link",
+    "copied": "Link copied!",
+    "shareWhatsApp": "Share on WhatsApp",
+    "status": {
+      "available": "Available",
+      "sold": "Sold"
+    },
+    "breed": "Breed",
+    "age": "Age",
+    "years": "years",
+    "price": "Price",
+    "description": "Description",
+    "videos": "Videos",
+    "prevPhoto": "Previous",
+    "nextPhoto": "Next",
+    "contact": "Contact about the horse"
   }
 }

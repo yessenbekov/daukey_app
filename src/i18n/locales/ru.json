@@ -57,5 +57,26 @@
     "contactUsForMoreInfo": "Свяжитесь с нами для получения дополнительной информации",
     "writeWhatsapp": "Написать в WhatsApp",
     "askedQuestions": "Часто задаваемые вопросы"
+  },
+  "horseDetailsPage": {
+    "loading": "Загрузка...",
+    "notFound": "Лошадь не найдена",
+    "backToList": "Назад к списку",
+    "copyLink": "Скопировать ссылку",
+    "copied": "Ссылка скопирована!",
+    "shareWhatsApp": "Поделиться в WhatsApp",
+    "status": {
+      "available": "В наличии",
+      "sold": "Продано"
+    },
+    "breed": "Порода",
+    "age": "Возраст",
+    "years": "лет",
+    "price": "Цена",
+    "description": "Описание",
+    "videos": "Видео",
+    "prevPhoto": "Предыдущее",
+    "nextPhoto": "Следующее",
+    "contact": "Связаться по лошади"
   }
 }

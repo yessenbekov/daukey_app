@@ -83,6 +83,11 @@ export default function AdminHorsesPage() {
   const handleAddHorse = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (files.length === 0) {
+      toast.error("Пожалуйста, добавьте хотя бы одну фотографию");
+      return;
+    }
+
     setLoading(true);
     const photoUrls: string[] = [];
 
@@ -169,6 +174,8 @@ export default function AdminHorsesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Удалить?")) return;
+
+    console.log("Удаление:", id);
     const { error } = await supabase.from("horses").delete().eq("id", id);
     if (!error) {
       toast.success("Удалено");

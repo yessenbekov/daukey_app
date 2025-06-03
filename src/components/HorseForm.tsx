@@ -57,6 +57,7 @@ export default function HorseForm({
           className="p-2 border rounded w-full"
           value={form.name}
           onChange={onChange}
+          required
         />
         <input
           name="age"
@@ -65,6 +66,7 @@ export default function HorseForm({
           className="p-2 border rounded w-full"
           value={form.age}
           onChange={onChange}
+          required
         />
         <input
           name="breed"
@@ -80,6 +82,7 @@ export default function HorseForm({
           className="p-2 border rounded w-full"
           value={form.price}
           onChange={onChange}
+          required
         />
       </div>
 
@@ -102,6 +105,7 @@ export default function HorseForm({
           multiple
           onChange={onFileChange}
           className="w-full p-2 border rounded"
+          required
         />
         {previews.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">

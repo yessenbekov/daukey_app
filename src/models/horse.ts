@@ -12,4 +12,5 @@ export interface Horse {
   videos: string[]; // YouTube ссылки
   isAvailable: boolean;
   price?: number; // опционально
+  status?: string
 }

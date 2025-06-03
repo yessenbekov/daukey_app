@@ -2,8 +2,7 @@ import createMiddleware from "next-intl/middleware";
 
 export default createMiddleware({
   locales: ["en", "ru", "kk"],
-  defaultLocale: "kk",
-  localePrefix: "as-needed", // 👈 решает редирект / -> /en
+  defaultLocale: "kk"
 });
 
 export const config = {

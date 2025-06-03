@@ -5,11 +5,9 @@ import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import InstallPrompt from "@/components/InstallPrompt";
-import { useInstallPrompt } from "@/components/InstallPrompt";
 
 export default function Home() {
   const t = useTranslations("homePage");
-  const { showManualPrompt } = useInstallPrompt();
 
   return (
     <main

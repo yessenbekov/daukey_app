@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -8,6 +8,8 @@ import Image from "next/image";
 import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
 import { ITEMS_PER_PAGE, SKELETON_COUNT } from "@/utils/constants";
+import { ClipboardCopy, Send, Share2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function HorsesPage() {
   const [horses, setHorses] = useState<Horse[]>([]);
@@ -17,6 +19,22 @@ export default function HorsesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOption, setSortOption] = useState("created_desc");
   const [selectedBreed, setSelectedBreed] = useState("");
+  const [openShareId, setOpenShareId] = useState<string | null>(null);
+
+  const shareMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node)
+      ) {
+        setOpenShareId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const fetchHorses = async () => {
@@ -149,36 +167,85 @@ export default function HorsesPage() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {currentHorses.map((horse) => (
-              <Link
+              <div
                 key={horse.id}
-                href={`/${locale}/horse/${horse.id}`}
-                className="block border rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
+                className="border rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
               >
-                <div className="relative aspect-video w-full">
-                  <Image
-                    src={horse.photos[0]}
-                    alt={horse.name}
-                    fill
-                    className="object-cover"
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                  />
-                </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
-                  <p className="text-sm text-gray-600 mb-1">
-                    {horse.breed || "—"} —{" "}
-                    {`${horse.age} ${t("horseDetails.ageWithCount")}`}
-                  </p>
-                  {horse.description && (
-                    <p className="text-sm mb-2 line-clamp-2 text-gray-800">
-                      {horse.description}
+                <Link href={`/${locale}/horse/${horse.id}`} className="block">
+                  <div className="relative aspect-video w-full">
+                    <Image
+                      src={horse.photos[0]}
+                      alt={horse.name}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                    />
+                  </div>
+                  <div className="p-4 pb-2">
+                    <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
+                    <p className="text-sm text-gray-600 mb-1">
+                      {horse.breed || "—"} —{" "}
+                      {`${horse.age} ${t("horseDetails.ageWithCount")}`}
                     </p>
-                  )}
-                  <p className="text-green-700 font-bold">
-                    {horse?.price?.toLocaleString("ru-RU")} ₸
-                  </p>
+                    {horse.description && (
+                      <p className="text-sm mb-2 line-clamp-2 text-gray-800">
+                        {horse.description}
+                      </p>
+                    )}
+                    <p className="text-green-700 font-bold">
+                      {horse?.price?.toLocaleString("ru-RU")} ₸
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Кнопка поделиться — вне <Link /> */}
+                <div className="px-4 pb-4 relative">
+                  <div className="flex justify-end relative">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenShareId(
+                          openShareId === horse.id ? null : horse.id
+                        )
+                      }
+                      className="text-gray-500 hover:text-black transition active:scale-90"
+                      title="Поделиться"
+                    >
+                      <Share2 size={18} />
+                    </button>
+
+                    {openShareId === horse.id && (
+                      <div ref={shareMenuRef}>
+                        <div className="absolute top-full mt-2 right-0 bg-white border shadow-md rounded-lg w-52 z-50">
+                          <button
+                            onClick={() => {
+                              const url = `${window.location.origin}/${locale}/horse/${horse.id}`;
+                              navigator.clipboard.writeText(url);
+                              toast.success("Ссылка скопирована!");
+                              setOpenShareId(null);
+                            }}
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
+                          >
+                            <ClipboardCopy size={16} /> Скопировать ссылку
+                          </button>
+
+                          <a
+                            href={`https://wa.me/?text=${encodeURIComponent(
+                              `${horse.name} — ${window.location.origin}/${locale}/horse/${horse.id}`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 text-sm"
+                            onClick={() => setOpenShareId(null)}
+                          >
+                            <Send size={16} /> Поделиться в WhatsApp
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
 

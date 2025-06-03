@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daukey App — Нет подключения</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/icons/icon-192x192.png" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background-color: #f7f7f7;
+        color: #222;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
+        justify-content: center;
+      }
+      img {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+      }
+      p {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 2rem;
+      }
+      button {
+        background-color: #000;
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="/icons/icon-192x192.png" alt="Daukey App" />
+    <h1>Вы оффлайн</h1>
+    <p>Нет подключения к интернету. Проверьте сеть и попробуйте снова.</p>
+    <button onclick="location.reload()">Повторить попытку</button>
+  </body>
+</html>

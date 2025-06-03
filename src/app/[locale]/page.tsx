@@ -1,6 +1,6 @@
 "use client";
 
-import { socialLinks } from "@/utils/constants";
+import { socialLinks, whatsAppNumber } from "@/utils/constants";
 import { MapPin } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
@@ -113,7 +113,7 @@ export default function Home() {
             {t("contactUsForMoreInfo")}
           </p>
           <a
-            href="https://wa.me/77001234567"
+            href={`https://wa.me/${whatsAppNumber}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition"

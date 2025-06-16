@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
 import { whatsAppNumber } from "@/utils/constants";
+import InstallPrompt from "@/components/InstallPrompt";
 
 function convertToEmbedUrl(url: string): string {
   if (url.includes("watch?v=")) {
@@ -215,7 +216,7 @@ export default function HorseDetailsPage() {
         )}
         {horse.age && (
           <p>
-            <strong>{t("age")}:</strong> {horse.age} {t("years")}
+            <strong>{t("age")}:</strong> {horse.year}
           </p>
         )}
         {horse.price && (
@@ -255,6 +256,19 @@ export default function HorseDetailsPage() {
           {t("contact")}
         </button>
       </div>
+
+      <InstallPrompt />
+      <footer className="text-center text-xs text-black mt-8 pb-6">
+        © 2025 | Developed by{" "}
+        <a
+          href="https://instagram.com/esenbekov.t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-red-600"
+        >
+          Talgat Yessenbekov
+        </a>
+      </footer>
     </div>
   );
 }

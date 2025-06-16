@@ -33,7 +33,7 @@
       "age": "Жасы",
       "breed": "Тұқымы",
       "description": "Сипаттама",
-      "ageWithCount": "жаста"
+      "ageWithCount": "жылы туылған"
     }
   },
   "servicesPage": {
@@ -70,7 +70,7 @@
       "sold": "Сатылды"
     },
     "breed": "Тұқымы",
-    "age": "Жасы",
+    "age": "Туған жылы",
     "years": "жас",
     "price": "Бағасы",
     "description": "Сипаттама",

@@ -24,7 +24,7 @@ export default function HorseCard({ horse, onEdit, onDelete }: Props) {
       <div className="p-4 space-y-1">
         <h2 className="text-lg font-bold">{horse.name}</h2>
         <p className="text-sm text-gray-600">
-          {horse.breed} — {horse.age} лет
+          {horse.breed} — {horse.year} год
         </p>
         <p className="text-green-700 font-semibold">
           {horse?.price?.toLocaleString("ru-RU")} ₸

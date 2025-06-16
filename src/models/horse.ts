@@ -2,7 +2,7 @@
 export interface Horse {
   id: string;
   name: string;
-  age: number;
+  age?: number;
   breed: string;
   color: string;
   height: number; // в см
@@ -13,4 +13,5 @@ export interface Horse {
   isAvailable: boolean;
   price?: number; // опционально
   status?: string
+  year: number;
 }

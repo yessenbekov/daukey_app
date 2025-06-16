@@ -4,7 +4,7 @@ import React from "react";
 interface Props {
   form: {
     name: string;
-    age: string;
+    year: string;
     breed: string;
     description: string;
     price: string;
@@ -60,11 +60,11 @@ export default function HorseForm({
           required
         />
         <input
-          name="age"
-          placeholder="Возраст"
+          name="year"
+          placeholder="Год рождения"
           type="number"
           className="p-2 border rounded w-full"
-          value={form.age}
+          value={form.year}
           onChange={onChange}
           required
         />

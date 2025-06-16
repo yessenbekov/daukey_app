@@ -7,9 +7,14 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
-import { ITEMS_PER_PAGE, SKELETON_COUNT, whatsAppNumber } from "@/utils/constants";
+import {
+  ITEMS_PER_PAGE,
+  SKELETON_COUNT,
+  whatsAppNumber,
+} from "@/utils/constants";
 import { ClipboardCopy, Send, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function HorsesPage() {
   const [horses, setHorses] = useState<Horse[]>([]);
@@ -53,8 +58,8 @@ export default function HorsesPage() {
             horse.name &&
             horse.price &&
             horse.photos?.[0] &&
-            horse.age !== null &&
-            horse.age !== undefined
+            horse.year !== null &&
+            horse.year !== undefined
         );
         setHorses(valid);
       }
@@ -77,9 +82,9 @@ export default function HorsesPage() {
       case "price_desc":
         return (b.price ?? 0) - (a.price ?? 0);
       case "age_asc":
-        return a.age - b.age;
+        return a.year - b.year;
       case "age_desc":
-        return b.age - a.age;
+        return b.year - a.year;
       default:
         return 0;
     }
@@ -185,7 +190,7 @@ export default function HorsesPage() {
                     <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
                     <p className="text-sm text-gray-600 mb-1">
                       {horse.breed || "—"} —{" "}
-                      {`${horse.age} ${t("horseDetails.ageWithCount")}`}
+                      {`${horse.year} ${t("horseDetails.ageWithCount")}`}
                     </p>
                     {horse.description && (
                       <p className="text-sm mb-2 line-clamp-2 text-gray-800">
@@ -269,6 +274,18 @@ export default function HorsesPage() {
           </div>
         </>
       )}
+      <InstallPrompt />
+      <footer className="text-center text-xs text-black mt-8 pb-6">
+        © 2025 | Developed by{" "}
+        <a
+          href="https://instagram.com/esenbekov.t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-red-600"
+        >
+          Talgat Yessenbekov
+        </a>
+      </footer>
     </div>
   );
 }

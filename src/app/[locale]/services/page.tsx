@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function ServicesPage() {
   const t = useTranslations("servicesPage");
@@ -158,6 +159,18 @@ export default function ServicesPage() {
           {t("writeWhatsapp")}
         </a>
       </div>
+      <InstallPrompt />
+      <footer className="text-center text-xs text-black mt-8 pb-6">
+        © 2025 | Developed by{" "}
+        <a
+          href="https://instagram.com/esenbekov.t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-red-600"
+        >
+          Talgat Yessenbekov
+        </a>
+      </footer>
     </motion.main>
   );
 }

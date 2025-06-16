@@ -13,7 +13,7 @@ import { ITEMS_PER_PAGE } from "@/utils/constants";
 export default function AdminHorsesPage() {
   const [form, setForm] = useState({
     name: "",
-    age: "",
+    year: "",
     breed: "",
     description: "",
     price: "",
@@ -105,7 +105,7 @@ export default function AdminHorsesPage() {
 
     const { error } = await supabase.from("horses").insert({
       ...form,
-      age: Number(form.age),
+      year: Number(form.year),
       price: Number(form.price),
       photos: photoUrls,
       videos: videoLinks.filter(Boolean),
@@ -116,7 +116,7 @@ export default function AdminHorsesPage() {
     else {
       toast.success("Лошадь добавлена");
       router.refresh();
-      setForm({ name: "", age: "", breed: "", description: "", price: "" });
+      setForm({ name: "", year: "", breed: "", description: "", price: "" });
       setFiles([]);
       setPreviews([]);
       setVideoLinks([""]);
@@ -152,7 +152,7 @@ export default function AdminHorsesPage() {
       .from("horses")
       .update({
         ...form,
-        age: Number(form.age),
+        age: Number(form.year),
         price: Number(form.price),
         photos: photoUrls,
         videos: videoLinks.filter(Boolean),
@@ -163,7 +163,7 @@ export default function AdminHorsesPage() {
     else {
       toast.success("Обновлено");
       setEditingHorse(null);
-      setForm({ name: "", age: "", breed: "", description: "", price: "" });
+      setForm({ name: "", year: "", breed: "", description: "", price: "" });
       setFiles([]);
       setPreviews([]);
       setVideoLinks([""]);
@@ -187,7 +187,7 @@ export default function AdminHorsesPage() {
     setEditingHorse(horse);
     setForm({
       name: horse.name,
-      age: String(horse.age),
+      year: String(horse.year),
       breed: horse.breed,
       description: horse.description,
       price: String(horse.price),

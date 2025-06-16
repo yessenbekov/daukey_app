@@ -33,7 +33,7 @@
       "age": "Возраст",
       "breed": "Порода",
       "description": "Описание",
-      "ageWithCount": "лет"
+      "ageWithCount": "года"
     }
   },
   "servicesPage": {
@@ -70,7 +70,7 @@
       "sold": "Продано"
     },
     "breed": "Порода",
-    "age": "Возраст",
+    "age": "Год рождения",
     "years": "лет",
     "price": "Цена",
     "description": "Описание",

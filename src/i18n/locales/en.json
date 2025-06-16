@@ -33,7 +33,7 @@
       "age": "Age",
       "breed": "Breed",
       "description": "Description",
-      "ageWithCount": "years old"
+      "ageWithCount": "year"
     }
   },
   "servicesPage": {
@@ -70,7 +70,7 @@
       "sold": "Sold"
     },
     "breed": "Breed",
-    "age": "Age",
+    "age": "Born year",
     "years": "years",
     "price": "Price",
     "description": "Description",

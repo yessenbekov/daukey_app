@@ -259,7 +259,7 @@ export default function HorseDetailsPage() {
 
       <InstallPrompt />
       <footer className="text-center text-xs text-black mt-8 pb-6">
-        © 2025 | Developed by{" "}
+        © {new Date().getFullYear()} | Developed by{" "}
         <a
           href="https://instagram.com/esenbekov.t"
           target="_blank"

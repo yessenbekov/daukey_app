@@ -125,7 +125,7 @@ export default function Home() {
 
       <InstallPrompt />
       <footer className="text-center text-xs text-white/60 mt-8 pb-6">
-        © 2025 | Developed by{" "}
+        © {new Date().getFullYear()} | Developed by{" "}
         <a
           href="https://instagram.com/esenbekov.t"
           target="_blank"

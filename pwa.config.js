@@ -19,7 +19,7 @@ const runtimeCaching = [
   },
   // Supabase изображения
   {
-    urlPattern: /^https:\/\/luxikyclvakgjtcawupf\.supabase\.co\/.*/i,
+    urlPattern: /^https:\/\/nefqjrnzxqowqjzvuvcf\.supabase\.co\/.*/i,
     handler: "CacheFirst",
     options: {
       cacheName: "supabase-images",

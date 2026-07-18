@@ -2,15 +2,27 @@
 
 import HorseForm from "@/components/HorseForm";
 import HorseCard from "@/components/HorseCard";
+import PaymentPanel from "@/components/PaymentPanel";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import { v4 as uuidv4 } from "uuid";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Horse } from "@/models";
 import { ITEMS_PER_PAGE } from "@/utils/constants";
+import { useAuth } from "@/context/AuthProvider";
+
+interface Owner {
+  id: string;
+  full_name: string | null;
+}
 
 export default function AdminHorsesPage() {
+  const supabase = createClient();
+  const router = useRouter();
+  const { locale } = useParams();
+  const { profile, loading: authLoading } = useAuth();
+
   const [form, setForm] = useState({
     name: "",
     year: "",
@@ -18,6 +30,8 @@ export default function AdminHorsesPage() {
     description: "",
     price: "",
   });
+  const [ownerId, setOwnerId] = useState("");
+  const [owners, setOwners] = useState<Owner[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [videoLinks, setVideoLinks] = useState<string[]>([""]);
@@ -29,11 +43,29 @@ export default function AdminHorsesPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const router = useRouter();
+  const isAdmin = profile?.role === "admin" && profile?.status === "approved";
+
+  useEffect(() => {
+    if (!authLoading && !isAdmin) {
+      router.replace(`/${locale}/dashboard`);
+    }
+  }, [authLoading, isAdmin, locale, router]);
 
   useEffect(() => {
     fetchHorses();
   }, [search, page]);
+
+  useEffect(() => {
+    const fetchOwners = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .eq("role", "owner")
+        .eq("status", "approved");
+      setOwners((data || []) as Owner[]);
+    };
+    if (isAdmin) fetchOwners();
+  }, [isAdmin]);
 
   const fetchHorses = async () => {
     const from = (page - 1) * ITEMS_PER_PAGE;
@@ -110,6 +142,7 @@ export default function AdminHorsesPage() {
       photos: photoUrls,
       videos: videoLinks.filter(Boolean),
       is_available: true,
+      owner_id: ownerId || null,
     });
 
     if (error) toast.error("Ошибка добавления");
@@ -117,6 +150,7 @@ export default function AdminHorsesPage() {
       toast.success("Лошадь добавлена");
       router.refresh();
       setForm({ name: "", year: "", breed: "", description: "", price: "" });
+      setOwnerId("");
       setFiles([]);
       setPreviews([]);
       setVideoLinks([""]);
@@ -152,10 +186,11 @@ export default function AdminHorsesPage() {
       .from("horses")
       .update({
         ...form,
-        age: Number(form.year),
+        year: Number(form.year),
         price: Number(form.price),
         photos: photoUrls,
         videos: videoLinks.filter(Boolean),
+        owner_id: ownerId || null,
       })
       .eq("id", editingHorse.id);
 
@@ -164,6 +199,7 @@ export default function AdminHorsesPage() {
       toast.success("Обновлено");
       setEditingHorse(null);
       setForm({ name: "", year: "", breed: "", description: "", price: "" });
+      setOwnerId("");
       setFiles([]);
       setPreviews([]);
       setVideoLinks([""]);
@@ -192,10 +228,15 @@ export default function AdminHorsesPage() {
       description: horse.description,
       price: String(horse.price),
     });
+    setOwnerId(horse.owner_id || "");
     setVideoLinks(horse.videos || [""]);
     setPreviews(horse.photos || []);
     setShowForm(true);
   };
+
+  if (authLoading || !isAdmin) {
+    return null;
+  }
 
   return (
     <div className="container max-w-4xl py-10">
@@ -225,6 +266,9 @@ export default function AdminHorsesPage() {
           videoLinks={videoLinks}
           loading={loading}
           isEdit={!!editingHorse}
+          owners={owners}
+          ownerId={ownerId}
+          onOwnerChange={setOwnerId}
           onChange={handleChange}
           onFileChange={(e) =>
             handleFileChange(e.target.files ? Array.from(e.target.files) : [])
@@ -244,12 +288,12 @@ export default function AdminHorsesPage() {
       <h2 className="text-xl font-semibold mb-4">Список лошадей</h2>
       <div className="grid md:grid-cols-2 gap-4">
         {horses.map((horse) => (
-          <HorseCard
-            key={horse.id}
-            horse={horse}
-            onEdit={startEditing}
-            onDelete={handleDelete}
-          />
+          <div key={horse.id}>
+            <HorseCard horse={horse} onEdit={startEditing} onDelete={handleDelete} />
+            <div className="border border-t-0 rounded-b-xl -mt-px">
+              <PaymentPanel horseId={horse.id} />
+            </div>
+          </div>
         ))}
       </div>
 

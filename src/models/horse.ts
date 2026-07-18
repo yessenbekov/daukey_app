@@ -14,4 +14,5 @@ export interface Horse {
   price?: number; // опционально
   status?: string
   year: number;
+  owner_id?: string | null;
 }

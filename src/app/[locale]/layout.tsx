@@ -7,6 +7,7 @@ import { getMessages } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
 import RegisterSW from "@/components/RegisterSW";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AuthProvider } from "@/context/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,8 +39,10 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={detectedLocale} messages={messages}>
           <SpeedInsights />
           <Toaster position="top-right" />
-          <Navbar />
-          {children}
+          <AuthProvider>
+            <Navbar />
+            {children}
+          </AuthProvider>
         </NextIntlClientProvider>
         <RegisterSW />
       </body>

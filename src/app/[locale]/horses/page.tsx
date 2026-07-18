@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import InstallPrompt from "@/components/InstallPrompt";
 
 export default function HorsesPage() {
+  const supabase = createClient();
   const [horses, setHorses] = useState<Horse[]>([]);
   const [loading, setLoading] = useState(true);
   const { locale } = useParams();

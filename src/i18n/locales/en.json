@@ -3,7 +3,11 @@
     "home": "Home",
     "horses": "Our Horses",
     "toggleTheme": "Toggle Theme",
-    "services": "Services"
+    "services": "Services",
+    "login": "Log in",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "logout": "Log out"
   },
   "homePage": {
     "writeToWpp": "Write to WhatsApp",
@@ -78,5 +82,35 @@
     "prevPhoto": "Previous",
     "nextPhoto": "Next",
     "contact": "Contact about the horse"
+  },
+  "authPage": {
+    "registerTitle": "Register",
+    "loginTitle": "Log in",
+    "fullNameLabel": "Full name",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "registerButton": "Register",
+    "loginButton": "Log in",
+    "registerSuccessPending": "Your request has been submitted and is awaiting admin approval.",
+    "loginError": "Invalid email or password",
+    "genericError": "Something went wrong, please try again",
+    "passwordMismatch": "Passwords do not match",
+    "alreadyHaveAccount": "Already have an account?",
+    "noAccountYet": "Don't have an account yet?"
+  },
+  "dashboardPage": {
+    "title": "Dashboard",
+    "myHorses": "My horses",
+    "noHorses": "No horses are assigned to you yet",
+    "paymentsHistory": "Payment history",
+    "noPayments": "No payments yet",
+    "amount": "Amount",
+    "period": "Period",
+    "note": "Note",
+    "paidAt": "Date",
+    "statusPending": "Your account is awaiting admin approval",
+    "statusRejected": "Your request was rejected. Please contact the club admin."
   }
 }

@@ -3,7 +3,11 @@
     "home": "Басты бет",
     "horses": "Біздің аттар",
     "toggleTheme": "Тақталарды өзгерту",
-    "services": "Қызметтер"
+    "services": "Қызметтер",
+    "login": "Кіру",
+    "register": "Тіркелу",
+    "dashboard": "Жеке кабинет",
+    "logout": "Шығу"
   },
   "homePage": {
     "writeToWpp": "WhatsApp-қа жазу",
@@ -78,5 +82,35 @@
     "prevPhoto": "Алдыңғы",
     "nextPhoto": "Келесі",
     "contact": "Жылқы жайлы хабарласу"
+  },
+  "authPage": {
+    "registerTitle": "Тіркелу",
+    "loginTitle": "Кіру",
+    "fullNameLabel": "Аты-жөні",
+    "phoneLabel": "Телефон",
+    "emailLabel": "Email",
+    "passwordLabel": "Құпия сөз",
+    "confirmPasswordLabel": "Құпия сөзді қайталаңыз",
+    "registerButton": "Тіркелу",
+    "loginButton": "Кіру",
+    "registerSuccessPending": "Өтініш жіберілді, әкімшінің растауын күтіңіз.",
+    "loginError": "Email немесе құпия сөз қате",
+    "genericError": "Бірдеңе дұрыс болмады, қайталап көріңіз",
+    "passwordMismatch": "Құпия сөздер сәйкес келмейді",
+    "alreadyHaveAccount": "Аккаунтыңыз бар ма?",
+    "noAccountYet": "Әлі аккаунтыңыз жоқ па?"
+  },
+  "dashboardPage": {
+    "title": "Жеке кабинет",
+    "myHorses": "Менің аттарым",
+    "noHorses": "Сізге әлі ешбір ат тіркелмеген",
+    "paymentsHistory": "Төлемдер тарихы",
+    "noPayments": "Төлемдер әлі жоқ",
+    "amount": "Сомасы",
+    "period": "Кезеңі",
+    "note": "Ескертпе",
+    "paidAt": "Күні",
+    "statusPending": "Сіздің аккаунтыңыз әкімшінің растауын күтуде",
+    "statusRejected": "Өтінішіңіз қабылданбады. Клуб әкімшісіне хабарласыңыз."
   }
 }

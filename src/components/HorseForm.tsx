@@ -1,6 +1,11 @@
 import Image from "next/image";
 import React from "react";
 
+interface Owner {
+  id: string;
+  full_name: string | null;
+}
+
 interface Props {
   form: {
     name: string;
@@ -13,6 +18,9 @@ interface Props {
   videoLinks: string[];
   loading: boolean;
   isEdit?: boolean;
+  owners?: Owner[];
+  ownerId?: string;
+  onOwnerChange?: (ownerId: string) => void;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -31,6 +39,9 @@ export default function HorseForm({
   videoLinks,
   loading,
   isEdit = false,
+  owners = [],
+  ownerId = "",
+  onOwnerChange,
   onChange,
   onFileChange,
   onVideoChange,
@@ -85,6 +96,25 @@ export default function HorseForm({
           required
         />
       </div>
+
+      {/* Владелец */}
+      {onOwnerChange && (
+        <div>
+          <label className="block font-medium mb-2">Владелец</label>
+          <select
+            value={ownerId}
+            onChange={(e) => onOwnerChange(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="">Без владельца</option>
+            {owners.map((owner) => (
+              <option key={owner.id} value={owner.id}>
+                {owner.full_name || owner.id}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Описание */}
       <textarea

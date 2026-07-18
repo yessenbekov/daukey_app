@@ -3,7 +3,11 @@
     "home": "Главная",
     "horses": "Наши лошади",
     "toggleTheme": "Сменить тему",
-    "services": "Услуги"
+    "services": "Услуги",
+    "login": "Войти",
+    "register": "Регистрация",
+    "dashboard": "Личный кабинет",
+    "logout": "Выйти"
   },
   "homePage": {
     "writeToWpp": "Написать на WhatsApp",
@@ -78,5 +82,35 @@
     "prevPhoto": "Предыдущее",
     "nextPhoto": "Следующее",
     "contact": "Связаться по лошади"
+  },
+  "authPage": {
+    "registerTitle": "Регистрация",
+    "loginTitle": "Вход",
+    "fullNameLabel": "Имя и фамилия",
+    "phoneLabel": "Телефон",
+    "emailLabel": "Email",
+    "passwordLabel": "Пароль",
+    "confirmPasswordLabel": "Повторите пароль",
+    "registerButton": "Зарегистрироваться",
+    "loginButton": "Войти",
+    "registerSuccessPending": "Заявка отправлена и ожидает одобрения администратора.",
+    "loginError": "Неверный email или пароль",
+    "genericError": "Что-то пошло не так, попробуйте ещё раз",
+    "passwordMismatch": "Пароли не совпадают",
+    "alreadyHaveAccount": "Уже есть аккаунт?",
+    "noAccountYet": "Ещё нет аккаунта?"
+  },
+  "dashboardPage": {
+    "title": "Личный кабинет",
+    "myHorses": "Мои лошади",
+    "noHorses": "За вами пока не закреплено ни одной лошади",
+    "paymentsHistory": "История оплат",
+    "noPayments": "Платежей пока нет",
+    "amount": "Сумма",
+    "period": "Период",
+    "note": "Примечание",
+    "paidAt": "Дата",
+    "statusPending": "Ваш аккаунт ожидает одобрения администратора",
+    "statusRejected": "Заявка отклонена. Свяжитесь с администратором клуба."
   }
 }

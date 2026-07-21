@@ -98,7 +98,9 @@
     "genericError": "Бірдеңе дұрыс болмады, қайталап көріңіз",
     "passwordMismatch": "Құпия сөздер сәйкес келмейді",
     "alreadyHaveAccount": "Аккаунтыңыз бар ма?",
-    "noAccountYet": "Әлі аккаунтыңыз жоқ па?"
+    "noAccountYet": "Әлі аккаунтыңыз жоқ па?",
+    "orDivider": "немесе",
+    "continueWithGoogle": "Google арқылы кіру"
   },
   "dashboardPage": {
     "title": "Жеке кабинет",

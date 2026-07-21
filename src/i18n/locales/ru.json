@@ -98,7 +98,9 @@
     "genericError": "Что-то пошло не так, попробуйте ещё раз",
     "passwordMismatch": "Пароли не совпадают",
     "alreadyHaveAccount": "Уже есть аккаунт?",
-    "noAccountYet": "Ещё нет аккаунта?"
+    "noAccountYet": "Ещё нет аккаунта?",
+    "orDivider": "или",
+    "continueWithGoogle": "Войти через Google"
   },
   "dashboardPage": {
     "title": "Личный кабинет",

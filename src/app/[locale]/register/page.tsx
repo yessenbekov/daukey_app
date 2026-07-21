@@ -65,6 +65,15 @@ export default function RegisterPage() {
     setLoading(false);
   };
 
+  const handleGoogleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=/${locale}/dashboard`,
+      },
+    });
+  };
+
   if (submitted) {
     return (
       <div className="container max-w-md mx-auto py-24 px-4 text-center">
@@ -137,6 +146,20 @@ export default function RegisterPage() {
           }`}
         >
           {t("registerButton")}
+        </button>
+
+        <div className="flex items-center gap-3 text-xs text-gray-400">
+          <div className="h-px flex-1 bg-gray-200" />
+          {t("orDivider")}
+          <div className="h-px flex-1 bg-gray-200" />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full px-6 py-2 rounded border border-gray-300 hover:bg-gray-50"
+        >
+          {t("continueWithGoogle")}
         </button>
 
         <p className="text-center text-sm">

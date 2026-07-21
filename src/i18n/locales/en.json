@@ -98,7 +98,9 @@
     "genericError": "Something went wrong, please try again",
     "passwordMismatch": "Passwords do not match",
     "alreadyHaveAccount": "Already have an account?",
-    "noAccountYet": "Don't have an account yet?"
+    "noAccountYet": "Don't have an account yet?",
+    "orDivider": "or",
+    "continueWithGoogle": "Continue with Google"
   },
   "dashboardPage": {
     "title": "Dashboard",

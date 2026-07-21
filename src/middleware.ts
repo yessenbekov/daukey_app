@@ -26,6 +26,13 @@ function localeFromPathname(pathname: string): string {
 }
 
 export default async function middleware(request: NextRequest) {
+  // OAuth-колбэк живёт вне [locale] по фиксированному пути (он зарегистрирован
+  // как redirect URI в Google Cloud Console) — не должен ни попадать под
+  // locale-редирект next-intl, ни под проверку авторизации.
+  if (request.nextUrl.pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
   // Обновляет/валидирует auth-сессию (обязательно для Server Components ниже
   // по цепочке). Роль/статус (admin vs owner, pending vs approved) здесь не
   // проверяем — это делает сама страница; middleware отсекает только

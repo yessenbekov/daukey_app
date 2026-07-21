@@ -26,7 +26,27 @@ export default async function DashboardPage({
     .select("*")
     .eq("id", user.id)
     .single();
-  const profile = profileData as Profile | null;
+  let profile = profileData as Profile | null;
+
+  if (!profile) {
+    // auth.users мог появиться не через обычную регистрацию (signUp), а через
+    // привязку уже существующего в общем Supabase-проекте аккаунта к новому
+    // провайдеру (например, вход через Google для пользователя kokpar-game/
+    // Shezhire) — тогда триггер handle_new_user() не срабатывает, и профиль
+    // нужно создать здесь же, при первом заходе в кабинет.
+    const { data: created } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        full_name:
+          (user.user_metadata?.full_name as string | undefined) ??
+          (user.user_metadata?.name as string | undefined) ??
+          null,
+      })
+      .select()
+      .single();
+    profile = created as Profile | null;
+  }
 
   if (!profile || profile.status !== "approved") {
     return (

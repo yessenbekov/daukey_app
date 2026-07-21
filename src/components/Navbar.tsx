@@ -14,19 +14,22 @@ export function Navbar() {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
-  const { profile, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   const isHome = pathname === `/${locale}`;
   const isHorses = pathname.startsWith(`/${locale}/horses`);
   const isServices = pathname.startsWith(`/${locale}/services`);
   const isAdminPage = pathname.startsWith(`/${locale}/admin`);
-  const isDashboardPage = pathname.startsWith(`/${locale}/dashboard`);
+  const isAccountPage =
+    pathname.startsWith(`/${locale}/dashboard`) ||
+    pathname.startsWith(`/${locale}/login`) ||
+    pathname.startsWith(`/${locale}/register`);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNavClick = () => setMenuOpen(false);
 
   const isAdmin = profile?.role === "admin" && profile?.status === "approved";
-  const isApproved = profile?.status === "approved";
+  const accountHref = user ? `/${locale}/dashboard` : `/${locale}/login`;
 
   const handleLogout = async () => {
     await signOut();
@@ -99,20 +102,18 @@ export function Navbar() {
               </span>
             </Link>
 
-            {isApproved && (
-              <Link href={`/${locale}/dashboard`} className={navItemClass}>
-                {isDashboardPage && <span className="text-primary">•</span>}
-                <span
-                  className={`${
-                    isDashboardPage
-                      ? "font-semibold underline underline-offset-4"
-                      : "hover:opacity-70"
-                  }`}
-                >
-                  {t("dashboard")}
-                </span>
-              </Link>
-            )}
+            <Link href={accountHref} className={navItemClass}>
+              {isAccountPage && <span className="text-primary">•</span>}
+              <span
+                className={`${
+                  isAccountPage
+                    ? "font-semibold underline underline-offset-4"
+                    : "hover:opacity-70"
+                }`}
+              >
+                {t("dashboard")}
+              </span>
+            </Link>
 
             {isAdmin && (
               <>
@@ -140,19 +141,10 @@ export function Navbar() {
               </>
             )}
 
-            {profile ? (
+            {user && (
               <button onClick={handleLogout} className={navItemClass}>
                 <span className="hover:opacity-70">{t("logout")}</span>
               </button>
-            ) : (
-              <>
-                <Link href={`/${locale}/login`} className={navItemClass}>
-                  <span className="hover:opacity-70">{t("login")}</span>
-                </Link>
-                <Link href={`/${locale}/register`} className={navItemClass}>
-                  <span className="hover:opacity-70">{t("register")}</span>
-                </Link>
-              </>
             )}
 
             <LocaleSwitcher />
@@ -224,24 +216,22 @@ export function Navbar() {
               </span>
             </Link>
 
-            {isApproved && (
-              <Link
-                href={`/${locale}/dashboard`}
-                onClick={handleNavClick}
-                className={`${navItemClass} py-1`}
+            <Link
+              href={accountHref}
+              onClick={handleNavClick}
+              className={`${navItemClass} py-1`}
+            >
+              {isAccountPage && <span className="text-primary">•</span>}
+              <span
+                className={`${
+                  isAccountPage
+                    ? "font-semibold underline underline-offset-4"
+                    : "hover:underline"
+                }`}
               >
-                {isDashboardPage && <span className="text-primary">•</span>}
-                <span
-                  className={`${
-                    isDashboardPage
-                      ? "font-semibold underline underline-offset-4"
-                      : "hover:underline"
-                  }`}
-                >
-                  {t("dashboard")}
-                </span>
-              </Link>
-            )}
+                {t("dashboard")}
+              </span>
+            </Link>
 
             {isAdmin && (
               <>
@@ -271,30 +261,13 @@ export function Navbar() {
               </>
             )}
 
-            {profile ? (
+            {user && (
               <button
                 onClick={handleLogout}
                 className={`${navItemClass} py-1`}
               >
                 <span className="hover:underline">{t("logout")}</span>
               </button>
-            ) : (
-              <>
-                <Link
-                  href={`/${locale}/login`}
-                  onClick={handleNavClick}
-                  className={`${navItemClass} py-1`}
-                >
-                  <span className="hover:underline">{t("login")}</span>
-                </Link>
-                <Link
-                  href={`/${locale}/register`}
-                  onClick={handleNavClick}
-                  className={`${navItemClass} py-1`}
-                >
-                  <span className="hover:underline">{t("register")}</span>
-                </Link>
-              </>
             )}
 
             <LocaleSwitcher />

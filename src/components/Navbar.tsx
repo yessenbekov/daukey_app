@@ -116,29 +116,18 @@ export function Navbar() {
             </Link>
 
             {isAdmin && (
-              <>
-                <Link
-                  href={`/${locale}/admin/horses`}
-                  className={navItemClass}
+              <Link href={`/${locale}/admin/horses`} className={navItemClass}>
+                {isAdminPage && <span className="text-primary">•</span>}
+                <span
+                  className={`${
+                    isAdminPage
+                      ? "font-semibold underline underline-offset-4"
+                      : "hover:opacity-70"
+                  }`}
                 >
-                  {isAdminPage && <span className="text-primary">•</span>}
-                  <span
-                    className={`${
-                      isAdminPage
-                        ? "font-semibold underline underline-offset-4"
-                        : "hover:opacity-70"
-                    }`}
-                  >
-                    Admin
-                  </span>
-                </Link>
-                <Link
-                  href={`/${locale}/admin/users`}
-                  className={navItemClass}
-                >
-                  <span className="hover:opacity-70">Users</span>
-                </Link>
-              </>
+                  Admin
+                </span>
+              </Link>
             )}
 
             {user && (
@@ -234,31 +223,22 @@ export function Navbar() {
             </Link>
 
             {isAdmin && (
-              <>
-                <Link
-                  href={`/${locale}/admin/horses`}
-                  onClick={handleNavClick}
-                  className={`${navItemClass} py-1`}
+              <Link
+                href={`/${locale}/admin/horses`}
+                onClick={handleNavClick}
+                className={`${navItemClass} py-1`}
+              >
+                {isAdminPage && <span className="text-primary">•</span>}
+                <span
+                  className={`${
+                    isAdminPage
+                      ? "font-semibold underline underline-offset-4"
+                      : "hover:underline"
+                  }`}
                 >
-                  {isAdminPage && <span className="text-primary">•</span>}
-                  <span
-                    className={`${
-                      isAdminPage
-                        ? "font-semibold underline underline-offset-4"
-                        : "hover:underline"
-                    }`}
-                  >
-                    Admin
-                  </span>
-                </Link>
-                <Link
-                  href={`/${locale}/admin/users`}
-                  onClick={handleNavClick}
-                  className={`${navItemClass} py-1`}
-                >
-                  <span className="hover:underline">Users</span>
-                </Link>
-              </>
+                  Admin
+                </span>
+              </Link>
             )}
 
             {user && (

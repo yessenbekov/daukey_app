@@ -3,6 +3,8 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Horse, Payment, Profile } from "@/models";
+import HorseOwnerEditPanel from "@/components/HorseOwnerEditPanel";
+import { formatPeriod } from "@/utils/formatPeriod";
 
 export default async function DashboardPage({
   params,
@@ -119,8 +121,15 @@ export default async function DashboardPage({
                     <p className="text-sm text-gray-600">
                       {horse.breed} — {horse.year}
                     </p>
+                    {horse.price != null && (
+                      <p className="text-sm text-green-700 font-semibold">
+                        {horse.price.toLocaleString("ru-RU")} ₸
+                      </p>
+                    )}
                   </div>
                 </div>
+
+                <HorseOwnerEditPanel horse={horse} />
 
                 <div className="border-t px-4 py-3">
                   <h4 className="font-semibold mb-2">
@@ -147,7 +156,7 @@ export default async function DashboardPage({
                             <td className="py-1">
                               {p.amount.toLocaleString("ru-RU")} ₸
                             </td>
-                            <td className="py-1">{p.period || "—"}</td>
+                            <td className="py-1">{formatPeriod(p.period)}</td>
                             <td className="py-1">{p.note || "—"}</td>
                           </tr>
                         ))}

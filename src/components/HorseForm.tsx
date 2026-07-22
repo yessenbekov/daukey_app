@@ -88,12 +88,11 @@ export default function HorseForm({
         />
         <input
           name="price"
-          placeholder="Цена (₸)"
+          placeholder="Цена (₸, необязательно)"
           type="number"
           className="p-2 border rounded w-full"
           value={form.price}
           onChange={onChange}
-          required
         />
       </div>
 
@@ -128,14 +127,15 @@ export default function HorseForm({
 
       {/* Фото */}
       <div>
-        <label className="block font-medium mb-2">Фотографии</label>
+        <label className="block font-medium mb-2">
+          Фотографии (необязательно, можно добавить позже)
+        </label>
         <input
           type="file"
           accept="image/*"
           multiple
           onChange={onFileChange}
           className="w-full p-2 border rounded"
-          required
         />
         {previews.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">

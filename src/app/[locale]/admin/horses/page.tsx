@@ -3,6 +3,7 @@
 import HorseForm from "@/components/HorseForm";
 import HorseCard from "@/components/HorseCard";
 import PaymentPanel from "@/components/PaymentPanel";
+import AdminNav from "@/components/AdminNav";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { v4 as uuidv4 } from "uuid";
@@ -115,11 +116,6 @@ export default function AdminHorsesPage() {
   const handleAddHorse = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (files.length === 0) {
-      toast.error("Пожалуйста, добавьте хотя бы одну фотографию");
-      return;
-    }
-
     setLoading(true);
     const photoUrls: string[] = [];
 
@@ -138,7 +134,7 @@ export default function AdminHorsesPage() {
     const { error } = await supabase.from("horses").insert({
       ...form,
       year: Number(form.year),
-      price: Number(form.price),
+      price: form.price ? Number(form.price) : null,
       photos: photoUrls,
       videos: videoLinks.filter(Boolean),
       is_available: true,
@@ -187,7 +183,7 @@ export default function AdminHorsesPage() {
       .update({
         ...form,
         year: Number(form.year),
-        price: Number(form.price),
+        price: form.price ? Number(form.price) : null,
         photos: photoUrls,
         videos: videoLinks.filter(Boolean),
         owner_id: ownerId || null,
@@ -226,7 +222,7 @@ export default function AdminHorsesPage() {
       year: String(horse.year),
       breed: horse.breed,
       description: horse.description,
-      price: String(horse.price),
+      price: horse.price != null ? String(horse.price) : "",
     });
     setOwnerId(horse.owner_id || "");
     setVideoLinks(horse.videos || [""]);
@@ -240,12 +236,13 @@ export default function AdminHorsesPage() {
 
   return (
     <div className="container max-w-4xl py-10">
+      <AdminNav />
       <input
         type="text"
         placeholder="Поиск по имени"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mt-15 mb-4 p-2 border rounded w-full"
+        className="mb-4 p-2 border rounded w-full"
       />
 
       <button

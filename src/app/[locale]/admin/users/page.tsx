@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthProvider";
 import { Profile, ProfileStatus } from "@/models";
+import AdminNav from "@/components/AdminNav";
 
 export default function AdminUsersPage() {
   const supabase = createClient();
@@ -73,7 +74,8 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-10 mt-15">
+    <div className="container max-w-4xl py-10">
+      <AdminNav />
       <h1 className="text-2xl font-bold mb-6">Пользователи</h1>
 
       <div className="flex gap-2 mb-4">

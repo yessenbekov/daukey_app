@@ -198,9 +198,11 @@ export default function HorsesPage() {
                         {horse.description}
                       </p>
                     )}
-                    <p className="text-green-700 font-bold">
-                      {horse?.price?.toLocaleString("ru-RU")} ₸
-                    </p>
+                    {horse.price != null && (
+                      <p className="text-green-700 font-bold">
+                        {horse.price.toLocaleString("ru-RU")} ₸
+                      </p>
+                    )}
                   </div>
                 </Link>
 

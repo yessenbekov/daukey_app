@@ -4,12 +4,19 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import { Payment } from "@/models";
+import { formatPeriod } from "@/utils/formatPeriod";
+
+const currentMonth = new Date().toISOString().slice(0, 7);
 
 export default function PaymentPanel({ horseId }: { horseId: string }) {
   const supabase = createClient();
   const [open, setOpen] = useState(false);
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [form, setForm] = useState({ amount: "", period: "", note: "" });
+  const [form, setForm] = useState({
+    amount: "",
+    period: currentMonth,
+    note: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const fetchPayments = async () => {
@@ -47,7 +54,7 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
     if (error) toast.error("Ошибка добавления платежа");
     else {
       toast.success("Платёж добавлен");
-      setForm({ amount: "", period: "", note: "" });
+      setForm({ amount: "", period: currentMonth, note: "" });
       fetchPayments();
     }
     setLoading(false);
@@ -77,13 +84,12 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
               required
             />
             <input
-              type="text"
-              placeholder="Период (напр. Июль 2026)"
+              type="month"
               value={form.period}
               onChange={(e) =>
                 setForm((p) => ({ ...p, period: e.target.value }))
               }
-              className="p-1 border rounded text-sm flex-1 min-w-32"
+              className="p-1 border rounded text-sm"
             />
             <input
               type="text"
@@ -110,8 +116,7 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
               {payments.map((p) => (
                 <li key={p.id} className="flex justify-between">
                   <span>
-                    {p.paid_at}
-                    {p.period ? ` — ${p.period}` : ""}
+                    {p.paid_at} — {formatPeriod(p.period)}
                   </span>
                   <span>{p.amount.toLocaleString("ru-RU")} ₸</span>
                 </li>

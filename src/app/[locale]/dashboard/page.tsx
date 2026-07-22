@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Horse, Payment, Profile } from "@/models";
 import HorseOwnerEditPanel from "@/components/HorseOwnerEditPanel";
+import ProfileEditPanel from "@/components/ProfileEditPanel";
 import { formatPeriod } from "@/utils/formatPeriod";
 
 export default async function DashboardPage({
@@ -92,6 +93,9 @@ export default async function DashboardPage({
   return (
     <div className="container max-w-4xl mx-auto py-24 px-4">
       <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
+
+      <ProfileEditPanel profile={profile} email={user.email ?? ""} />
+
       <h2 className="text-xl font-semibold mb-4">{t("myHorses")}</h2>
 
       {horses.length === 0 ? (

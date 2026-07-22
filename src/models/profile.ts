@@ -9,4 +9,8 @@ export interface Profile {
   role: ProfileRole;
   status: ProfileStatus;
   created_at: string;
+  birth_date: string | null;
+  instagram: string | null;
+  whatsapp: string | null;
+  telegram: string | null;
 }

@@ -93,7 +93,7 @@ export default function LoginPage() {
           {t("loginButton")}
         </button>
 
-        <div className="flex items-center gap-3 text-xs text-gray-400">
+        <div className="flex items-center gap-3 text-xs text-gray-600">
           <div className="h-px flex-1 bg-gray-200" />
           {t("orDivider")}
           <div className="h-px flex-1 bg-gray-200" />

@@ -116,7 +116,7 @@ export default function Home() {
             href={`https://wa.me/${whatsAppNumber}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full transition"
+            className="inline-block bg-green-800 hover:bg-green-900 text-white px-6 py-3 rounded-full transition"
           >
             {t("writeToWpp")}
           </a>

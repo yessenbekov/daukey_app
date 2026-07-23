@@ -189,7 +189,7 @@ export default function HorsesPage() {
                     )}
                     <span
                       className={`absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white ${
-                        horse.owner_id ? "bg-gray-700" : "bg-green-600"
+                        horse.owner_id ? "bg-gray-700" : "bg-green-800"
                       }`}
                     >
                       {horse.owner_id ? t("statusPrivate") : t("statusForSale")}

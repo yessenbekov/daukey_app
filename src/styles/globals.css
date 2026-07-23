@@ -90,42 +90,14 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background: var(--background-light);
-  border-radius: var(--border-radius);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.dark .container {
-  background: var(--background-dark);
-}
-
-.btn {
-  background-color: var(--accent);
-  color: white;
-  padding: 12px 24px;
-  border-radius: var(--border-radius);
-  transition: all 0.3s ease;
-}
-
-.btn:hover {
-  background-color: darken(#b88b4a, 10%);
-}
-
-.card {
-  background: var(--background-light);
-  color: var(--text-light);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.dark .card {
-  background: var(--background-dark);
-  color: var(--text-dark);
+/*
+ * Плейсхолдеры по умолчанию (browser UA gray ~#9ca3af) не проходят
+ * WCAG AA (4.5:1) на белом фоне — затемняем для всех форм сайта.
+ */
+input::placeholder,
+textarea::placeholder {
+  color: #4b5563;
+  opacity: 1;
 }
 
 @theme inline {

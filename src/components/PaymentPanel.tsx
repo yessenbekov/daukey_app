@@ -5,6 +5,15 @@ import { createClient } from "@/lib/supabase/client";
 import toast from "react-hot-toast";
 import { Payment } from "@/models";
 import { formatPeriod } from "@/utils/formatPeriod";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -117,16 +126,40 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
           ) : payments.length === 0 ? (
             <p className="text-xs text-gray-500">Платежей пока нет</p>
           ) : (
-            <ul className="text-xs space-y-1">
-              {payments.map((p) => (
-                <li key={p.id} className="flex justify-between">
-                  <span>
-                    {p.paid_at} — {formatPeriod(p.period)}
-                  </span>
-                  <span>{p.amount.toLocaleString("ru-RU")} ₸</span>
-                </li>
-              ))}
-            </ul>
+            <div className="rounded-md border bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="h-8 px-2 text-xs">Дата</TableHead>
+                    <TableHead className="h-8 px-2 text-xs">Период</TableHead>
+                    <TableHead className="h-8 px-2 text-xs">Сумма</TableHead>
+                    <TableHead className="h-8 px-2 text-xs">
+                      Примечание
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {payments.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="h-9 px-2 text-xs text-muted-foreground">
+                        {p.paid_at}
+                      </TableCell>
+                      <TableCell className="h-9 px-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {formatPeriod(p.period)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="h-9 px-2 text-xs font-medium">
+                        {p.amount.toLocaleString("ru-RU")} ₸
+                      </TableCell>
+                      <TableCell className="h-9 px-2 text-xs text-muted-foreground">
+                        {p.note || "—"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </div>
       )}

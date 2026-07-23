@@ -6,6 +6,15 @@ import { Horse, Payment, Profile } from "@/models";
 import HorseOwnerEditPanel from "@/components/HorseOwnerEditPanel";
 import ProfileEditPanel from "@/components/ProfileEditPanel";
 import { formatPeriod } from "@/utils/formatPeriod";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function DashboardPage({
   params,
@@ -144,28 +153,46 @@ export default async function DashboardPage({
                       {t("noPayments")}
                     </p>
                   ) : (
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-left text-gray-500">
-                          <th className="py-1">{t("paidAt")}</th>
-                          <th className="py-1">{t("amount")}</th>
-                          <th className="py-1">{t("period")}</th>
-                          <th className="py-1">{t("note")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {horsePayments.map((p) => (
-                          <tr key={p.id} className="border-t">
-                            <td className="py-1">{p.paid_at}</td>
-                            <td className="py-1">
-                              {p.amount.toLocaleString("ru-RU")} ₸
-                            </td>
-                            <td className="py-1">{formatPeriod(p.period)}</td>
-                            <td className="py-1">{p.note || "—"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <div className="rounded-md border bg-card">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="hover:bg-transparent">
+                            <TableHead className="h-9 px-3 text-xs">
+                              {t("paidAt")}
+                            </TableHead>
+                            <TableHead className="h-9 px-3 text-xs">
+                              {t("period")}
+                            </TableHead>
+                            <TableHead className="h-9 px-3 text-xs">
+                              {t("amount")}
+                            </TableHead>
+                            <TableHead className="h-9 px-3 text-xs">
+                              {t("note")}
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {horsePayments.map((p) => (
+                            <TableRow key={p.id}>
+                              <TableCell className="px-3 text-sm text-muted-foreground">
+                                {p.paid_at}
+                              </TableCell>
+                              <TableCell className="px-3">
+                                <Badge variant="secondary">
+                                  {formatPeriod(p.period)}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="px-3 text-sm font-medium">
+                                {p.amount.toLocaleString("ru-RU")} ₸
+                              </TableCell>
+                              <TableCell className="px-3 text-sm text-muted-foreground">
+                                {p.note || "—"}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                   )}
                 </div>
               </div>

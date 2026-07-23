@@ -143,9 +143,9 @@ export default function ServicesPage() {
       </div>
 
       <div className="mt-14 text-center bg-gray-50 py-10 px-4 rounded-xl shadow-inner">
-        <h3 className="text-xl sm:text-2xl font-semibold mb-4">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">
           {t("readyForRidingOrTraining")}
-        </h3>
+        </h2>
         <p className="text-gray-600 mb-6 text-sm sm:text-base">
           {t("contactUsForMoreInfo")}
         </p>
@@ -153,7 +153,7 @@ export default function ServicesPage() {
           href="https://wa.me/77001234567?text=Здравствуйте!%20Хочу%20записаться%20на%20прогулку"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-green-800 text-white font-semibold rounded-xl hover:bg-green-900 transition"
         >
           <MessageCircleIcon className="w-5 h-5" />
           {t("writeWhatsapp")}

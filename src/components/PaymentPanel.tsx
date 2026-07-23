@@ -12,6 +12,7 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
   const supabase = createClient();
   const [open, setOpen] = useState(false);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [paymentsLoading, setPaymentsLoading] = useState(false);
   const [form, setForm] = useState({
     amount: "",
     period: currentMonth,
@@ -20,12 +21,14 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
   const [loading, setLoading] = useState(false);
 
   const fetchPayments = async () => {
+    setPaymentsLoading(true);
     const { data } = await supabase
       .from("payments")
       .select("*")
       .eq("horse_id", horseId)
       .order("paid_at", { ascending: false });
     setPayments((data || []) as Payment[]);
+    setPaymentsLoading(false);
   };
 
   const toggleOpen = async () => {
@@ -109,7 +112,9 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
             </button>
           </form>
 
-          {payments.length === 0 ? (
+          {paymentsLoading ? (
+            <p className="text-xs text-gray-500">Загружаем...</p>
+          ) : payments.length === 0 ? (
             <p className="text-xs text-gray-500">Платежей пока нет</p>
           ) : (
             <ul className="text-xs space-y-1">

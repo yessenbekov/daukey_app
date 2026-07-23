@@ -12,6 +12,7 @@ import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
 import { whatsAppNumber } from "@/utils/constants";
 import InstallPrompt from "@/components/InstallPrompt";
+import Spinner from "@/components/Spinner";
 
 function convertToEmbedUrl(url: string): string {
   if (url.includes("watch?v=")) {
@@ -81,7 +82,7 @@ export default function HorseDetailsPage() {
     window.open(url, "_blank");
   };
 
-  if (loading) return <p className="p-4">{t("loading")}</p>;
+  if (loading) return <Spinner className="min-h-screen" label={t("loading")} />;
   if (!horse) return <p className="p-4 text-red-500">{t("notFound")}</p>;
 
   return (

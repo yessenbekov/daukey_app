@@ -4,6 +4,7 @@ import HorseForm from "@/components/HorseForm";
 import HorseCard from "@/components/HorseCard";
 import PaymentPanel from "@/components/PaymentPanel";
 import AdminNav from "@/components/AdminNav";
+import Spinner from "@/components/Spinner";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { v4 as uuidv4 } from "uuid";
@@ -39,6 +40,7 @@ export default function AdminHorsesPage() {
   const [horses, setHorses] = useState<Horse[]>([]);
   const [editingHorse, setEditingHorse] = useState<Horse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [page, setPage] = useState(1);
@@ -69,6 +71,7 @@ export default function AdminHorsesPage() {
   }, [isAdmin]);
 
   const fetchHorses = async () => {
+    setListLoading(true);
     const from = (page - 1) * ITEMS_PER_PAGE;
     const to = from + ITEMS_PER_PAGE - 1;
 
@@ -83,6 +86,7 @@ export default function AdminHorsesPage() {
     const { data, count } = await query;
     setHorses(data || []);
     if (count !== null) setTotalPages(Math.ceil(count / ITEMS_PER_PAGE));
+    setListLoading(false);
   };
 
   const handleChange = (
@@ -231,7 +235,7 @@ export default function AdminHorsesPage() {
   };
 
   if (authLoading || !isAdmin) {
-    return null;
+    return <Spinner className="min-h-screen" label="Проверяем доступ..." />;
   }
 
   return (
@@ -283,16 +287,22 @@ export default function AdminHorsesPage() {
       )}
 
       <h2 className="text-xl font-semibold mb-4">Список лошадей</h2>
-      <div className="grid md:grid-cols-2 gap-4">
-        {horses.map((horse) => (
-          <div key={horse.id}>
-            <HorseCard horse={horse} onEdit={startEditing} onDelete={handleDelete} />
-            <div className="border border-t-0 rounded-b-xl -mt-px">
-              <PaymentPanel horseId={horse.id} />
+      {listLoading ? (
+        <Spinner label="Загружаем лошадей..." />
+      ) : horses.length === 0 ? (
+        <p className="text-gray-500">Лошади не найдены</p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {horses.map((horse) => (
+            <div key={horse.id}>
+              <HorseCard horse={horse} onEdit={startEditing} onDelete={handleDelete} />
+              <div className="border border-t-0 rounded-b-xl -mt-px">
+                <PaymentPanel horseId={horse.id} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="flex justify-center mt-6 gap-4">
         <button

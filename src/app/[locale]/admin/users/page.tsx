@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthProvider";
 import { Profile, ProfileStatus } from "@/models";
 import AdminNav from "@/components/AdminNav";
+import Spinner from "@/components/Spinner";
 
 export default function AdminUsersPage() {
   const supabase = createClient();
@@ -16,6 +17,7 @@ export default function AdminUsersPage() {
 
   const [users, setUsers] = useState<Profile[]>([]);
   const [filter, setFilter] = useState<ProfileStatus | "all">("pending");
+  const [listLoading, setListLoading] = useState(true);
 
   const isAdmin = profile?.role === "admin" && profile?.status === "approved";
 
@@ -26,6 +28,7 @@ export default function AdminUsersPage() {
   }, [authLoading, isAdmin, locale, router]);
 
   const fetchUsers = async () => {
+    setListLoading(true);
     let query = supabase
       .from("profiles")
       .select("*")
@@ -35,6 +38,7 @@ export default function AdminUsersPage() {
 
     const { data } = await query;
     setUsers((data || []) as Profile[]);
+    setListLoading(false);
   };
 
   useEffect(() => {
@@ -70,7 +74,7 @@ export default function AdminUsersPage() {
   };
 
   if (authLoading || !isAdmin) {
-    return null;
+    return <Spinner className="min-h-screen" label="Проверяем доступ..." />;
   }
 
   return (
@@ -95,10 +99,12 @@ export default function AdminUsersPage() {
       </div>
 
       <div className="space-y-3">
-        {users.length === 0 && (
+        {listLoading ? (
+          <Spinner label="Загружаем пользователей..." />
+        ) : users.length === 0 ? (
           <p className="text-gray-500">Нет пользователей</p>
-        )}
-        {users.map((u) => (
+        ) : null}
+        {!listLoading && users.map((u) => (
           <div
             key={u.id}
             className="border rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 bg-white"

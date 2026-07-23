@@ -1,7 +1,7 @@
 {
   "navbar": {
     "home": "Главная",
-    "horses": "Наши лошади",
+    "horses": "Лошади клуба",
     "toggleTheme": "Сменить тему",
     "services": "Услуги",
     "login": "Войти",
@@ -19,8 +19,10 @@
     "contactUsForMoreInfo": "Свяжись с нами и мы поможем подобрать подходящую лошадь."
   },
   "horsesPage": {
-    "title": "Наши лошади",
-    "subtitle": "Найдите своего идеального спутника по верховой езде",
+    "title": "Лошади клуба",
+    "subtitle": "Все лошади, которые содержатся в нашем клубе",
+    "statusForSale": "В продаже",
+    "statusPrivate": "Частная лошадь",
     "noHorses": "В данный момент нет доступных лошадей.",
     "loading": "Загрузка...",
     "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",

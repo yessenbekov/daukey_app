@@ -1,7 +1,7 @@
 {
   "navbar": {
     "home": "Басты бет",
-    "horses": "Біздің аттар",
+    "horses": "Клуб аттары",
     "toggleTheme": "Тақталарды өзгерту",
     "services": "Қызметтер",
     "login": "Кіру",
@@ -19,8 +19,10 @@
     "contactUsForMoreInfo": "Бізбен хабарласыңыз және біз сізге мінсіз ат серігін таңдауға көмектесеміз."
   },
   "horsesPage": {
-    "title": "Біздің аттар",
-    "subtitle": "Сіздің мінсіз ат серігіңізді табыңыз",
+    "title": "Клуб аттары",
+    "subtitle": "Біздің клубта ұсталатын барлық аттар",
+    "statusForSale": "Сатылымда",
+    "statusPrivate": "Жеке ат",
     "noHorses": "Қазіргі уақытта аттар жоқ.",
     "loading": "Жүктелуде...",
     "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",

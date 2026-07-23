@@ -1,7 +1,7 @@
 {
   "navbar": {
     "home": "Home",
-    "horses": "Our Horses",
+    "horses": "Club Horses",
     "toggleTheme": "Toggle Theme",
     "services": "Services",
     "login": "Log in",
@@ -21,8 +21,10 @@
   "horsesPage": {
     "loading": "Loading...",
     "noHorses": "No horses available at the moment.",
-    "title": "Our Horses",
-    "subtitle": "Find your perfect horse companion",
+    "title": "Club Horses",
+    "subtitle": "All horses kept at our club",
+    "statusForSale": "For sale",
+    "statusPrivate": "Private horse",
     "description": "We have a variety of horses available for riding and training. Each horse has its own unique personality and skills.",
     "sortBy": "Sort by",
     "newest": "Newest",

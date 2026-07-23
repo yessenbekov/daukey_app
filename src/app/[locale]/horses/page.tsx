@@ -47,7 +47,6 @@ export default function HorsesPage() {
       const { data, error } = await supabase
         .from("horses")
         .select("*")
-        .eq("is_available", true)
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -56,11 +55,7 @@ export default function HorsesPage() {
       } else {
         const valid = (data || []).filter(
           (horse) =>
-            horse.name &&
-            horse.price &&
-            horse.photos?.[0] &&
-            horse.year !== null &&
-            horse.year !== undefined
+            horse.name && horse.year !== null && horse.year !== undefined
         );
         setHorses(valid);
       }
@@ -178,14 +173,27 @@ export default function HorsesPage() {
                 className="relative border rounded-xl shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
               >
                 <Link href={`/${locale}/horse/${horse.id}`} className="block">
-                  <div className="relative aspect-video w-full">
-                    <Image
-                      src={horse.photos[0]}
-                      alt={horse.name}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                    />
+                  <div className="relative aspect-video w-full bg-gray-100">
+                    {horse.photos?.[0] ? (
+                      <Image
+                        src={horse.photos[0]}
+                        alt={horse.name}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-4xl">
+                        🐎
+                      </div>
+                    )}
+                    <span
+                      className={`absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white ${
+                        horse.owner_id ? "bg-gray-700" : "bg-green-600"
+                      }`}
+                    >
+                      {horse.owner_id ? t("statusPrivate") : t("statusForSale")}
+                    </span>
                   </div>
                   <div className="p-4 pb-2">
                     <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
@@ -198,7 +206,7 @@ export default function HorsesPage() {
                         {horse.description}
                       </p>
                     )}
-                    {horse.price != null && (
+                    {horse.price != null && !horse.owner_id && (
                       <p className="text-green-700 font-bold">
                         {horse.price.toLocaleString("ru-RU")} ₸
                       </p>

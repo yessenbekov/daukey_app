@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { Profile, ProfileStatus } from "@/models";
 import AdminNav from "@/components/AdminNav";
 import Spinner from "@/components/Spinner";
+import UsersTable from "@/components/UsersTable";
 
 export default function AdminUsersPage() {
   const supabase = createClient();
@@ -78,7 +79,7 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-10">
+    <div className="container max-w-6xl py-10">
       <AdminNav />
       <h1 className="text-2xl font-bold mb-6">Пользователи</h1>
 
@@ -98,53 +99,16 @@ export default function AdminUsersPage() {
         ))}
       </div>
 
-      <div className="space-y-3">
-        {listLoading ? (
-          <Spinner label="Загружаем пользователей..." />
-        ) : users.length === 0 ? (
-          <p className="text-gray-500">Нет пользователей</p>
-        ) : null}
-        {!listLoading && users.map((u) => (
-          <div
-            key={u.id}
-            className="border rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 bg-white"
-          >
-            <div>
-              <p className="font-semibold">{u.full_name || "—"}</p>
-              <p className="text-sm text-gray-600">{u.phone || "—"}</p>
-              <p className="text-xs text-gray-500">
-                {u.role} · {u.status}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              {u.status !== "approved" && (
-                <button
-                  onClick={() => updateStatus(u.id, "approved")}
-                  className="px-3 py-1 bg-green-600 text-white rounded text-sm"
-                >
-                  Одобрить
-                </button>
-              )}
-              {u.status !== "rejected" && (
-                <button
-                  onClick={() => updateStatus(u.id, "rejected")}
-                  className="px-3 py-1 bg-red-600 text-white rounded text-sm"
-                >
-                  Отклонить
-                </button>
-              )}
-              {u.role !== "admin" && (
-                <button
-                  onClick={() => promoteToAdmin(u.id)}
-                  className="px-3 py-1 bg-gray-800 text-white rounded text-sm"
-                >
-                  Сделать админом
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      {listLoading ? (
+        <Spinner label="Загружаем пользователей..." />
+      ) : (
+        <UsersTable
+          users={users}
+          onApprove={(id) => updateStatus(id, "approved")}
+          onReject={(id) => updateStatus(id, "rejected")}
+          onPromote={promoteToAdmin}
+        />
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import { Golos_Text } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import { NextIntlClientProvider } from "next-intl";
@@ -9,7 +9,10 @@ import RegisterSW from "@/components/RegisterSW";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from "@/context/AuthProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const golosText = Golos_Text({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-sans",
+});
 
 export const metadata = {
   title: "Daukey App",
@@ -35,7 +38,7 @@ export default async function RootLayout({
         <link rel="icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className={inter.className}>
+      <body className={`${golosText.className} ${golosText.variable}`}>
         <NextIntlClientProvider locale={detectedLocale} messages={messages}>
           <SpeedInsights />
           <Toaster position="top-right" />

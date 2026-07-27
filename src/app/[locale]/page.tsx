@@ -11,17 +11,20 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      className="relative flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/alone.jpeg')" }}
     >
+      {/* Затемняющая подложка для контраста текста над фото (WCAG AA) */}
+      <div className="absolute inset-0 bg-black/35 pointer-events-none" />
+
       <motion.div
-        className="p-6 max-w-4xl w-full text-center"
+        className="relative p-6 max-w-4xl w-full text-center"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         <h2
-          className="text-xl font-semibold mt-15 mb-4 text-white"
+          className="text-2xl font-semibold mt-15 mb-4 text-white"
           style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
         >
           {t("socialMedia")}
@@ -45,13 +48,13 @@ export default function Home() {
       </motion.div>
 
       <motion.div
-        className="mt-10 px-4 w-full max-w-2xl"
+        className="relative mt-10 px-4 w-full max-w-2xl"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
       >
         <h2
-          className="text-xl font-semibold mb-4 text-white text-center"
+          className="text-2xl font-semibold mb-4 text-white text-center"
           style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
         >
           {t("location")}
@@ -108,7 +111,7 @@ export default function Home() {
 
       <div className="mt-10 mb-5 px-4 w-full max-w-2xl">
         <div className="bg-white/10 backdrop-blur-md text-white text-center p-6 rounded-2xl shadow-md">
-          <h3 className="text-xl font-semibold mb-2">{t("wannaKnowMore")}</h3>
+          <h3 className="text-2xl font-semibold mb-2">{t("wannaKnowMore")}</h3>
           <p className="mb-4 text-sm text-white/80">
             {t("contactUsForMoreInfo")}
           </p>

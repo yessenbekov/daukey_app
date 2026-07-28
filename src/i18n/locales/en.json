@@ -38,6 +38,12 @@
     "ageDesc": "Age: Old to Young",
     "breed": "Breed",
     "allBreeds": "All breeds",
+    "status": "Status",
+    "allStatuses": "All",
+    "resultsCount": "Showing {count} of {total}",
+    "noPhoto": "No photo yet",
+    "prevPage": "Prev",
+    "nextPage": "Next",
     "horseDetails": {
       "name": "Name",
       "age": "Age",

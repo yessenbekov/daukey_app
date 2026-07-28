@@ -38,6 +38,12 @@
     "ageDesc": "Жасы: Ересекке дейін",
     "breed": "Тұқым",
     "allBreeds": "Барлық тұқымдар",
+    "status": "Мәртебесі",
+    "allStatuses": "Барлығы",
+    "resultsCount": "{total} ішінен {count} көрсетілді",
+    "noPhoto": "Фото әлі жоқ",
+    "prevPage": "Артқа",
+    "nextPage": "Алға",
     "horseDetails": {
       "name": "Аты",
       "age": "Жасы",

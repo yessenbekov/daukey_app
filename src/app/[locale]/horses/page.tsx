@@ -24,6 +24,7 @@ export default function HorsesPage() {
   const t = useTranslations("horsesPage");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBreed, setSelectedBreed] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<"" | "for_sale" | "private">("");
   const [search, setSearch] = useState("");
   const [openShareId, setOpenShareId] = useState<string | null>(null);
 
@@ -71,16 +72,23 @@ export default function HorsesPage() {
   // страницы), возвращаемся на первую — иначе сетка молча показывает пусто.
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedBreed, search]);
+  }, [selectedBreed, selectedStatus, search]);
 
-  // Фильтрация по породе и живому поиску по кличке
-  const hasActiveFilters = Boolean(selectedBreed || search.trim());
+  // Фильтрация по породе, статусу и живому поиску по кличке
+  const hasActiveFilters = Boolean(
+    selectedBreed || selectedStatus || search.trim()
+  );
   const filtered = horses.filter((h) => {
     const matchesBreed = selectedBreed ? h.breed === selectedBreed : true;
+    const matchesStatus = selectedStatus
+      ? selectedStatus === "private"
+        ? Boolean(h.owner_id)
+        : !h.owner_id
+      : true;
     const matchesSearch = search.trim()
       ? h.name.toLowerCase().includes(search.trim().toLowerCase())
       : true;
-    return matchesBreed && matchesSearch;
+    return matchesBreed && matchesStatus && matchesSearch;
   });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
@@ -101,13 +109,17 @@ export default function HorsesPage() {
       </p>
 
       {/* Поиск и фильтр */}
-      <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
+      <div className="flex flex-wrap justify-center items-center gap-4 mb-3">
         <div className="relative w-full max-w-xs">
+          <label htmlFor="horse-search" className="sr-only">
+            {t("searchPlaceholder")}
+          </label>
           <Search
             size={16}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
+            id="horse-search"
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -127,8 +139,11 @@ export default function HorsesPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("breed")}</label>
+          <label htmlFor="horse-breed" className="text-sm font-medium">
+            {t("breed")}
+          </label>
           <select
+            id="horse-breed"
             value={selectedBreed}
             onChange={(e) => setSelectedBreed(e.target.value)}
             className="border rounded px-3 py-1 text-sm"
@@ -143,7 +158,31 @@ export default function HorsesPage() {
               ))}
           </select>
         </div>
+
+        <div className="flex items-center gap-2">
+          <label htmlFor="horse-status" className="text-sm font-medium">
+            {t("status")}
+          </label>
+          <select
+            id="horse-status"
+            value={selectedStatus}
+            onChange={(e) =>
+              setSelectedStatus(e.target.value as "" | "for_sale" | "private")
+            }
+            className="border rounded px-3 py-1 text-sm"
+          >
+            <option value="">{t("allStatuses")}</option>
+            <option value="for_sale">{t("statusForSale")}</option>
+            <option value="private">{t("statusPrivate")}</option>
+          </select>
+        </div>
       </div>
+
+      {!loading && horses.length > 0 && (
+        <p className="text-center text-xs text-gray-500 mb-6">
+          {t("resultsCount", { count: filtered.length, total: horses.length })}
+        </p>
+      )}
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -196,8 +235,11 @@ export default function HorsesPage() {
                         sizes="(min-width: 768px) 33vw, 100vw"
                       />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-4xl">
-                        🐎
+                      <div className="flex flex-col items-center justify-center h-full gap-1 bg-gradient-to-br from-amber-50 to-stone-100 text-amber-900/40">
+                        <span className="text-5xl">🐎</span>
+                        <span className="text-xs text-amber-900/50">
+                          {t("noPhoto")}
+                        </span>
                       </div>
                     )}
                     <span
@@ -279,6 +321,15 @@ export default function HorsesPage() {
 
           {/* Пагинация */}
           <div className="flex justify-center mt-8 gap-2">
+            {totalPages > 1 && (
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50"
+              >
+                {t("prevPage")}
+              </button>
+            )}
             {Array.from({ length: totalPages }).map((_, index) => {
               const pageNum = index + 1;
               return (
@@ -295,6 +346,15 @@ export default function HorsesPage() {
                 </button>
               );
             })}
+            {totalPages > 1 && (
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="px-3 py-1 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:opacity-50"
+              >
+                {t("nextPage")}
+              </button>
+            )}
           </div>
         </>
       )}

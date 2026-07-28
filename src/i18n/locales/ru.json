@@ -38,6 +38,12 @@
     "ageDesc": "Возраст: от старого к молодому",
     "breed": "Порода",
     "allBreeds": "Все породы",
+    "status": "Статус",
+    "allStatuses": "Все",
+    "resultsCount": "Показано {count} из {total}",
+    "noPhoto": "Фото пока нет",
+    "prevPage": "Назад",
+    "nextPage": "Вперёд",
     "horseDetails": {
       "name": "Имя",
       "age": "Возраст",

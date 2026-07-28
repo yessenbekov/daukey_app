@@ -1,25 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  CalendarIcon,
-  MessageCircleIcon,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { MessageCircleIcon, ChevronDown, ChevronUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import InstallPrompt from "@/components/InstallPrompt";
+import Spinner from "@/components/Spinner";
+import { createClient } from "@/lib/supabase/client";
+import { Service } from "@/models";
+
+function formatPrice(price: number) {
+  return `${new Intl.NumberFormat("ru-RU").format(price)} ₸`;
+}
 
 export default function ServicesPage() {
   const t = useTranslations("servicesPage");
-  const [expanded, setExpanded] = useState<string[]>(["riding", "kokpar"]);
+  const supabase = createClient();
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState<string[]>([]);
 
-  const toggle = (id: string) => {
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data } = await supabase
+        .from("services")
+        .select("*")
+        .eq("is_active", true)
+        .order("category", { ascending: true })
+        .order("sort_order", { ascending: true });
+
+      const list = (data || []) as Service[];
+      setServices(list);
+      setExpanded(Array.from(new Set(list.map((s) => s.category))));
+      setLoading(false);
+    };
+    fetchServices();
+  }, []);
+
+  const toggle = (category: string) => {
     setExpanded((prev) =>
-      prev.includes(id) ? prev.filter((key) => key !== id) : [...prev, id]
+      prev.includes(category)
+        ? prev.filter((key) => key !== category)
+        : [...prev, category]
     );
   };
+
+  const categories = Array.from(new Set(services.map((s) => s.category)));
 
   return (
     <motion.main
@@ -35,103 +61,58 @@ export default function ServicesPage() {
         {t("subtitle")}
       </p>
 
-      <section className="space-y-6">
-        {/* Horse Riding */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <button
-            className="w-full text-left p-5 sm:p-6 flex justify-between items-center text-lg sm:text-xl font-semibold"
-            onClick={() => toggle("riding")}
-          >
-            <span className="flex items-center gap-2">
-              🐎 {t("horseRiding")}
-            </span>
-            {expanded.includes("riding") ? (
-              <ChevronUp className="w-5 h-5" />
-            ) : (
-              <ChevronDown className="w-5 h-5" />
-            )}
-          </button>
-          {expanded.includes("riding") && (
-            <div className="px-5 pb-5 sm:px-6 sm:pb-6">
-              <ul className="text-sm sm:text-base space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("clubTerritory")} — 🕒 45 {t("minutes")} — 💰{" "}
-                    <strong>6 500 ₸</strong>
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("ridingInMountains")} — 🕒 90–120 {t("minutes")} (
-                    {t("dependsOnRider")}) — 💰 <strong>12 500 ₸</strong>
-                  </span>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Kokpar */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <button
-            className="w-full text-left p-5 sm:p-6 flex justify-between items-center text-lg sm:text-xl font-semibold"
-            onClick={() => toggle("kokpar")}
-          >
-            <span className="flex items-center gap-2">
-              <CalendarIcon className="w-5 h-5 text-black" /> {t("kokpar")}
-            </span>
-            {expanded.includes("kokpar") ? (
-              <ChevronUp className="w-5 h-5" />
-            ) : (
-              <ChevronDown className="w-5 h-5" />
-            )}
-          </button>
-          {expanded.includes("kokpar") && (
-            <>
-              <ul className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("oneTimeVisit")} — <strong>15 000 ₸</strong>
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("monthly")}:<br />
-                    <span className="ml-4 block">
-                      • {t("5timePerMonth")} — <strong>50 000 ₸</strong>
-                    </span>
-                    <span className="ml-4 block">
-                      • {t("4timePerMonth")} — <strong>40 000 ₸</strong>
-                    </span>
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("halfYear")} — <strong>221 000 ₸</strong>
-                    <span className="block text-xs text-gray-500">
-                      {t("halfYearDescription")}
-                    </span>
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="mt-0.5">•</span>
-                  <span>
-                    {t("yearly")} — <strong>390 000 ₸</strong>
-                    <span className="block text-xs text-gray-500">
-                      {t("yearlyDescription")}
-                    </span>
-                  </span>
-                </li>
-              </ul>
-            </>
-          )}
-        </div>
-      </section>
+      {loading ? (
+        <Spinner label="Загружаем услуги..." />
+      ) : categories.length === 0 ? (
+        <p className="text-center text-gray-500">
+          Пока нет доступных услуг
+        </p>
+      ) : (
+        <section className="space-y-6">
+          {categories.map((category) => {
+            const items = services.filter((s) => s.category === category);
+            const isOpen = expanded.includes(category);
+            return (
+              <div
+                key={category}
+                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+              >
+                <button
+                  className="w-full text-left p-5 sm:p-6 flex justify-between items-center text-lg sm:text-xl font-semibold"
+                  onClick={() => toggle(category)}
+                >
+                  <span>{category}</span>
+                  {isOpen ? (
+                    <ChevronUp className="w-5 h-5" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5" />
+                  )}
+                </button>
+                {isOpen && (
+                  <ul className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base space-y-2 text-gray-700">
+                    {items.map((service) => (
+                      <li key={service.id} className="flex items-start gap-2">
+                        <span className="mt-0.5">•</span>
+                        <span>
+                          {service.name}
+                          {service.description && (
+                            <span className="block text-xs text-gray-500">
+                              {service.description}
+                            </span>
+                          )}
+                          {" — "}
+                          <strong>{formatPrice(service.price)}</strong>
+                          {service.unit && ` (${service.unit})`}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </section>
+      )}
 
       <div className="mt-6">
         <iframe

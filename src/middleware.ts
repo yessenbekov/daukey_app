@@ -10,7 +10,10 @@ const intlMiddleware = createMiddleware({
   defaultLocale,
 });
 
-const PROTECTED_PREFIXES = ["/admin", "/dashboard"];
+// /dashboard больше не в этом списке: неавторизованным посетителям страница
+// сама показывает объяснение, что кабинет доступен только членам клуба
+// (с кнопками "Войти"/"Регистрация"), вместо жёсткого редиректа на /login.
+const PROTECTED_PREFIXES = ["/admin"];
 
 function stripLocale(pathname: string): string {
   const match = pathname.match(/^\/([a-z]{2})(\/.*|$)/);

@@ -1,10 +1,12 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { Horse, Payment, Profile } from "@/models";
 import HorseOwnerEditPanel from "@/components/HorseOwnerEditPanel";
 import ProfileEditPanel from "@/components/ProfileEditPanel";
+import LogoutButton from "@/components/LogoutButton";
+import CompleteProfileForm from "@/components/CompleteProfileForm";
 import { formatPeriod } from "@/utils/formatPeriod";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,7 +32,26 @@ export default async function DashboardPage({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(`/${locale}/login`);
+    return (
+      <div className="container max-w-md mx-auto py-24 px-4 text-center">
+        <h1 className="text-2xl font-bold mb-4">{t("closedClubTitle")}</h1>
+        <p className="text-gray-600 mb-8">{t("closedClubDescription")}</p>
+        <div className="flex flex-col gap-3">
+          <Link
+            href={`/${locale}/login`}
+            className="px-6 py-2 rounded bg-black text-white hover:bg-gray-900"
+          >
+            {t("loginButton")}
+          </Link>
+          <Link
+            href={`/${locale}/register`}
+            className="px-6 py-2 rounded border hover:bg-gray-50"
+          >
+            {t("registerButton")}
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const { data: profileData } = await supabase
@@ -60,15 +81,27 @@ export default async function DashboardPage({
     profile = created as Profile | null;
   }
 
+  // Вход через Google не даёт телефон (в отличие от обычной формы
+  // регистрации, где он обязателен) — пока новый пользователь его не
+  // укажет через эту форму, заявку в клуб считаем неподанной. Уже
+  // одобренных/отклонённых пользователей это не касается — только тех,
+  // кто ещё "pending" и пришёл именно через OAuth.
+  if (profile && profile.status === "pending" && !profile.phone) {
+    return (
+      <CompleteProfileForm profile={profile} email={user.email ?? ""} />
+    );
+  }
+
   if (!profile || profile.status !== "approved") {
     return (
       <div className="container max-w-2xl mx-auto py-24 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">{t("title")}</h1>
-        <p>
+        <p className="mb-6">
           {profile?.status === "rejected"
             ? t("statusRejected")
             : t("statusPending")}
         </p>
+        <LogoutButton label={t("logout")} />
       </div>
     );
   }
@@ -101,7 +134,10 @@ export default async function DashboardPage({
 
   return (
     <div className="container max-w-4xl mx-auto py-24 px-4">
-      <h1 className="text-2xl font-bold mb-6">{t("title")}</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <LogoutButton label={t("logout")} />
+      </div>
 
       <ProfileEditPanel profile={profile} email={user.email ?? ""} />
 

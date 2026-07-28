@@ -6,15 +6,14 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { LocaleSwitcher } from "./LocaleSwitcher";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthProvider";
 
 export function Navbar() {
   const t = useTranslations("navbar");
   const locale = useLocale();
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, profile, signOut } = useAuth();
+  const { profile } = useAuth();
 
   const isHome = pathname === `/${locale}`;
   const isHorses = pathname.startsWith(`/${locale}/horses`);
@@ -29,13 +28,7 @@ export function Navbar() {
   const handleNavClick = () => setMenuOpen(false);
 
   const isAdmin = profile?.role === "admin" && profile?.status === "approved";
-  const accountHref = user ? `/${locale}/dashboard` : `/${locale}/login`;
-
-  const handleLogout = async () => {
-    await signOut();
-    handleNavClick();
-    router.push(`/${locale}`);
-  };
+  const accountHref = `/${locale}/dashboard`;
 
   const navItemClass =
     "flex items-center gap-1 text-sm transition-all duration-200";
@@ -128,12 +121,6 @@ export function Navbar() {
                   Admin
                 </span>
               </Link>
-            )}
-
-            {user && (
-              <button onClick={handleLogout} className={navItemClass}>
-                <span className="hover:opacity-70">{t("logout")}</span>
-              </button>
             )}
 
             <LocaleSwitcher />
@@ -239,15 +226,6 @@ export function Navbar() {
                   Admin
                 </span>
               </Link>
-            )}
-
-            {user && (
-              <button
-                onClick={handleLogout}
-                className={`${navItemClass} py-1`}
-              >
-                <span className="hover:underline">{t("logout")}</span>
-              </button>
             )}
 
             <LocaleSwitcher />

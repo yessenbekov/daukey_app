@@ -115,6 +115,11 @@
     "note": "Note",
     "paidAt": "Date",
     "statusPending": "Your account is awaiting admin approval",
-    "statusRejected": "Your request was rejected. Please contact the club admin."
+    "statusRejected": "Your request was rejected. Please contact the club admin.",
+    "closedClubTitle": "The dashboard is only for club members",
+    "closedClubDescription": "Our club is a closed community. If you're already a member and have an account, log in. If you'd like to become a member, go to the registration form.",
+    "loginButton": "Log in",
+    "registerButton": "Register",
+    "logout": "Log out"
   }
 }

@@ -12,7 +12,7 @@ import {
   SKELETON_COUNT,
   whatsAppNumber,
 } from "@/utils/constants";
-import { ClipboardCopy, Send, Share2 } from "lucide-react";
+import { ClipboardCopy, Search, Send, Share2, X } from "lucide-react";
 import toast from "react-hot-toast";
 import InstallPrompt from "@/components/InstallPrompt";
 
@@ -23,8 +23,8 @@ export default function HorsesPage() {
   const { locale } = useParams();
   const t = useTranslations("horsesPage");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortOption, setSortOption] = useState("created_desc");
   const [selectedBreed, setSelectedBreed] = useState("");
+  const [search, setSearch] = useState("");
   const [openShareId, setOpenShareId] = useState<string | null>(null);
 
   const shareMenuRef = useRef<HTMLDivElement | null>(null);
@@ -66,28 +66,25 @@ export default function HorsesPage() {
     fetchHorses();
   }, []);
 
-  // Фильтрация и сортировка
-  const filtered = horses.filter((h) =>
-    selectedBreed ? h.breed === selectedBreed : true
-  );
+  // Если после фильтрации текущая страница стала недоступна (например,
+  // пользователь был на странице 3, а поиск/порода сузили список до одной
+  // страницы), возвращаемся на первую — иначе сетка молча показывает пусто.
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedBreed, search]);
 
-  const sorted = [...filtered].sort((a, b) => {
-    switch (sortOption) {
-      case "price_asc":
-        return (a.price ?? 0) - (b.price ?? 0);
-      case "price_desc":
-        return (b.price ?? 0) - (a.price ?? 0);
-      case "age_asc":
-        return a.year - b.year;
-      case "age_desc":
-        return b.year - a.year;
-      default:
-        return 0;
-    }
+  // Фильтрация по породе и живому поиску по кличке
+  const hasActiveFilters = Boolean(selectedBreed || search.trim());
+  const filtered = horses.filter((h) => {
+    const matchesBreed = selectedBreed ? h.breed === selectedBreed : true;
+    const matchesSearch = search.trim()
+      ? h.name.toLowerCase().includes(search.trim().toLowerCase())
+      : true;
+    return matchesBreed && matchesSearch;
   });
 
-  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
-  const currentHorses = sorted.slice(
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const currentHorses = filtered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -103,34 +100,37 @@ export default function HorsesPage() {
         <span className="border-b border-gray-300 pb-1">{t("subtitle")}</span>
       </p>
 
-      {/* Сортировка и фильтр */}
-      <div className="flex flex-wrap justify-center gap-6 mb-6">
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">{t("sortBy")}</label>
-          <select
-            value={sortOption}
-            onChange={(e) => {
-              setSortOption(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="border rounded px-3 py-1 text-sm"
-          >
-            <option value="created_desc">{t("newest")}</option>
-            <option value="price_asc">{t("priceAsc")}</option>
-            <option value="price_desc">{t("priceDesc")}</option>
-            <option value="age_asc">{t("ageAsc")}</option>
-            <option value="age_desc">{t("ageDesc")}</option>
-          </select>
+      {/* Поиск и фильтр */}
+      <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
+        <div className="relative w-full max-w-xs">
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("searchPlaceholder")}
+            className="w-full border rounded px-3 py-1.5 pl-9 pr-8 text-sm"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+              aria-label={t("clearSearch")}
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium">{t("breed")}</label>
           <select
             value={selectedBreed}
-            onChange={(e) => {
-              setSelectedBreed(e.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={(e) => setSelectedBreed(e.target.value)}
             className="border rounded px-3 py-1 text-sm"
           >
             <option value="">{t("allBreeds")}</option>
@@ -162,8 +162,21 @@ export default function HorsesPage() {
             </div>
           ))}
         </div>
-      ) : sorted.length === 0 ? (
-        <p className="text-center text-gray-500">{t("noHorses")}</p>
+      ) : filtered.length === 0 ? (
+        <div className="text-center text-gray-500">
+          <p>{hasActiveFilters ? t("noHorsesMatch") : t("noHorses")}</p>
+          {hasActiveFilters && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setSelectedBreed("");
+              }}
+              className="mt-3 text-sm underline hover:text-gray-800"
+            >
+              {t("resetFilters")}
+            </button>
+          )}
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

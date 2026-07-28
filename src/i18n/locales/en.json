@@ -21,6 +21,10 @@
   "horsesPage": {
     "loading": "Loading...",
     "noHorses": "No horses available at the moment.",
+    "noHorsesMatch": "No horses match your search.",
+    "resetFilters": "Reset filters",
+    "searchPlaceholder": "Search by name...",
+    "clearSearch": "Clear search",
     "title": "Club Horses",
     "subtitle": "All horses kept at our club",
     "statusForSale": "For sale",

@@ -108,6 +108,7 @@ export default function UsersTable({
         <TableHeader>
           <TableRow className="border-b hover:bg-transparent">
             <TableHead className="h-12 px-4 font-medium">Имя</TableHead>
+            <TableHead className="h-12 px-4 font-medium">Email</TableHead>
             <TableHead className="h-12 px-4 font-medium">Телефон</TableHead>
             <TableHead className="h-12 w-[120px] px-4 font-medium">
               Роль
@@ -128,6 +129,9 @@ export default function UsersTable({
               <TableRow className="hover:bg-muted/50" key={user.id}>
                 <TableCell className="h-16 px-4 font-medium">
                   {user.full_name || "—"}
+                </TableCell>
+                <TableCell className="h-16 px-4 text-muted-foreground text-sm">
+                  {user.email || "—"}
                 </TableCell>
                 <TableCell className="h-16 px-4 text-muted-foreground text-sm">
                   {user.phone || "—"}

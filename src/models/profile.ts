@@ -5,6 +5,7 @@ export type ProfileStatus = "pending" | "approved" | "rejected";
 export interface Profile {
   id: string;
   full_name: string | null;
+  email: string | null;
   phone: string | null;
   role: ProfileRole;
   status: ProfileStatus;

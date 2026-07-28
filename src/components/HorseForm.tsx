@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import PriceInput from "@/components/PriceInput";
 
 interface Owner {
   id: string;
@@ -86,10 +87,9 @@ export default function HorseForm({
           value={form.breed}
           onChange={onChange}
         />
-        <input
+        <PriceInput
           name="price"
           placeholder="Цена (₸, необязательно)"
-          type="number"
           className="p-2 border rounded w-full"
           value={form.price}
           onChange={onChange}

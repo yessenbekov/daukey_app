@@ -9,6 +9,7 @@ import { Service } from "@/models";
 import AdminNav from "@/components/AdminNav";
 import Spinner from "@/components/Spinner";
 import ServicesTable from "@/components/ServicesTable";
+import PriceInput from "@/components/PriceInput";
 
 const emptyForm = {
   category: "",
@@ -177,15 +178,12 @@ export default function AdminServicesPage() {
             rows={2}
           />
           <div className="flex gap-4">
-            <input
-              type="number"
+            <PriceInput
               name="price"
               placeholder="Цена, ₸"
               value={form.price}
               onChange={handleChange}
               required
-              min={0}
-              step="0.01"
               className="p-2 border rounded w-full"
             />
             <input

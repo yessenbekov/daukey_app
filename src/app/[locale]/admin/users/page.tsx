@@ -74,6 +74,43 @@ export default function AdminUsersPage() {
     }
   };
 
+  const demoteFromAdmin = async (id: string) => {
+    if (!confirm("Снять роль администратора у этого пользователя?")) return;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: "owner" })
+      .eq("id", id);
+
+    if (error) toast.error("Ошибка обновления");
+    else {
+      toast.success("Роль администратора снята");
+      fetchUsers();
+    }
+  };
+
+  const toggleActive = async (id: string, nextActive: boolean) => {
+    if (
+      !confirm(
+        nextActive
+          ? "Активировать аккаунт этого пользователя?"
+          : "Деактивировать аккаунт этого пользователя? Он потеряет доступ в личный кабинет."
+      )
+    )
+      return;
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_active: nextActive })
+      .eq("id", id);
+
+    if (error) toast.error("Ошибка обновления");
+    else {
+      toast.success(nextActive ? "Аккаунт активирован" : "Аккаунт деактивирован");
+      fetchUsers();
+    }
+  };
+
   if (authLoading || !isAdmin) {
     return <Spinner className="min-h-screen" label="Проверяем доступ..." />;
   }
@@ -104,9 +141,12 @@ export default function AdminUsersPage() {
       ) : (
         <UsersTable
           users={users}
+          currentUserId={profile?.id ?? ""}
           onApprove={(id) => updateStatus(id, "approved")}
           onReject={(id) => updateStatus(id, "rejected")}
           onPromote={promoteToAdmin}
+          onDemote={demoteFromAdmin}
+          onToggleActive={toggleActive}
         />
       )}
     </div>

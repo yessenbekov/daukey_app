@@ -9,6 +9,7 @@ export interface Profile {
   phone: string | null;
   role: ProfileRole;
   status: ProfileStatus;
+  is_active: boolean;
   created_at: string;
   birth_date: string | null;
   instagram: string | null;

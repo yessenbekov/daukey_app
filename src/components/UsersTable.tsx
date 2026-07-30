@@ -1,6 +1,14 @@
 "use client";
 
-import { CheckIcon, Loader2, ShieldIcon, XIcon } from "lucide-react";
+import {
+  BanIcon,
+  CheckIcon,
+  Loader2,
+  ShieldIcon,
+  ShieldOffIcon,
+  UserCheckIcon,
+  XIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +28,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Profile, ProfileStatus } from "@/models";
 
-type ActionType = "approve" | "reject" | "promote";
+type ActionType = "approve" | "reject" | "promote" | "demote" | "toggleActive";
 
 function getStatusBadge(status: ProfileStatus) {
   switch (status) {
@@ -69,14 +77,20 @@ function getRoleBadge(role: Profile["role"]) {
 
 export default function UsersTable({
   users,
+  currentUserId,
   onApprove,
   onReject,
   onPromote,
+  onDemote,
+  onToggleActive,
 }: {
   users: Profile[];
+  currentUserId: string;
   onApprove: (id: string) => Promise<void>;
   onReject: (id: string) => Promise<void>;
   onPromote: (id: string) => Promise<void>;
+  onDemote: (id: string) => Promise<void>;
+  onToggleActive: (id: string, nextActive: boolean) => Promise<void>;
 }) {
   const [pendingAction, setPendingAction] = useState<{
     id: string;
@@ -113,10 +127,10 @@ export default function UsersTable({
             <TableHead className="h-12 w-[120px] px-4 font-medium">
               Роль
             </TableHead>
-            <TableHead className="h-12 w-[120px] px-4 font-medium">
+            <TableHead className="h-12 w-[140px] px-4 font-medium">
               Статус
             </TableHead>
-            <TableHead className="h-12 w-[160px] px-4 font-medium">
+            <TableHead className="h-12 w-[200px] px-4 font-medium">
               Действия
             </TableHead>
           </TableRow>
@@ -124,6 +138,7 @@ export default function UsersTable({
         <TableBody>
           {users.map((user) => {
             const busy = isBusy(user.id);
+            const isSelf = user.id === currentUserId;
 
             return (
               <TableRow className="hover:bg-muted/50" key={user.id}>
@@ -140,7 +155,17 @@ export default function UsersTable({
                   {getRoleBadge(user.role)}
                 </TableCell>
                 <TableCell className="h-16 px-4">
-                  {getStatusBadge(user.status)}
+                  <div className="flex flex-col gap-1 items-start">
+                    {getStatusBadge(user.status)}
+                    {!user.is_active && (
+                      <Badge
+                        variant="outline"
+                        className="border-0 bg-gray-500/15 text-gray-700 hover:bg-gray-500/25 dark:bg-gray-500/10 dark:text-gray-400 dark:hover:bg-gray-500/20"
+                      >
+                        Деактивирован
+                      </Badge>
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="h-16 px-4">
                   <TooltipProvider>
@@ -195,7 +220,7 @@ export default function UsersTable({
                           <TooltipContent>Отклонить</TooltipContent>
                         </Tooltip>
                       )}
-                      {user.role !== "admin" && (
+                      {!isSelf && user.role !== "admin" && (
                         <Tooltip>
                           <TooltipTrigger
                             render={
@@ -218,6 +243,72 @@ export default function UsersTable({
                             )}
                           </TooltipTrigger>
                           <TooltipContent>Сделать админом</TooltipContent>
+                        </Tooltip>
+                      )}
+                      {!isSelf && user.role === "admin" && (
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                aria-label="Снять роль админа"
+                                className="h-8 w-8"
+                                disabled={busy}
+                                onClick={() =>
+                                  runAction(user, "demote", onDemote)
+                                }
+                                size="icon"
+                                variant="outline"
+                              />
+                            }
+                          >
+                            {isPending("demote", user.id) ? (
+                              <Loader2 className="size-4 animate-spin" />
+                            ) : (
+                              <ShieldOffIcon className="size-4" />
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>Снять роль админа</TooltipContent>
+                        </Tooltip>
+                      )}
+                      {!isSelf && (
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                aria-label={
+                                  user.is_active
+                                    ? "Деактивировать"
+                                    : "Активировать"
+                                }
+                                className={
+                                  user.is_active
+                                    ? "h-8 w-8 text-destructive hover:bg-destructive hover:text-white"
+                                    : "h-8 w-8"
+                                }
+                                disabled={busy}
+                                onClick={() =>
+                                  runAction(user, "toggleActive", (id) =>
+                                    onToggleActive(id, !user.is_active)
+                                  )
+                                }
+                                size="icon"
+                                variant="outline"
+                              />
+                            }
+                          >
+                            {isPending("toggleActive", user.id) ? (
+                              <Loader2 className="size-4 animate-spin" />
+                            ) : user.is_active ? (
+                              <BanIcon className="size-4" />
+                            ) : (
+                              <UserCheckIcon className="size-4" />
+                            )}
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {user.is_active
+                              ? "Деактивировать"
+                              : "Активировать"}
+                          </TooltipContent>
                         </Tooltip>
                       )}
                     </div>

@@ -93,12 +93,14 @@ export default async function DashboardPage({
     );
   }
 
-  if (!profile || profile.status !== "approved") {
+  if (!profile || profile.status !== "approved" || !profile.is_active) {
     return (
       <div className="container max-w-2xl mx-auto py-24 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">{t("title")}</h1>
         <p className="mb-6">
-          {profile?.status === "rejected"
+          {profile && !profile.is_active
+            ? t("statusDeactivated")
+            : profile?.status === "rejected"
             ? t("statusRejected")
             : t("statusPending")}
         </p>

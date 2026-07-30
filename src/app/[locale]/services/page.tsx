@@ -1,59 +1,31 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { MessageCircleIcon, ChevronDown, ChevronUp } from "lucide-react";
-import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
-import InstallPrompt from "@/components/InstallPrompt";
-import Spinner from "@/components/Spinner";
-import { createClient } from "@/lib/supabase/client";
+import { MessageCircleIcon } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { createClient } from "@/lib/supabase/server";
 import { Service } from "@/models";
+import ServicesAccordion from "@/components/ServicesAccordion";
+import InstallPrompt from "@/components/InstallPrompt";
+import { whatsAppNumber } from "@/utils/constants";
 
-function formatPrice(price: number) {
-  return `${new Intl.NumberFormat("ru-RU").format(price)} ₸`;
-}
+export default async function ServicesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "servicesPage" });
+  const supabase = await createClient();
 
-export default function ServicesPage() {
-  const t = useTranslations("servicesPage");
-  const supabase = createClient();
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState<string[]>([]);
+  const { data } = await supabase
+    .from("services")
+    .select("*")
+    .eq("is_active", true)
+    .order("category", { ascending: true })
+    .order("sort_order", { ascending: true });
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      const { data } = await supabase
-        .from("services")
-        .select("*")
-        .eq("is_active", true)
-        .order("category", { ascending: true })
-        .order("sort_order", { ascending: true });
-
-      const list = (data || []) as Service[];
-      setServices(list);
-      setExpanded(Array.from(new Set(list.map((s) => s.category))));
-      setLoading(false);
-    };
-    fetchServices();
-  }, []);
-
-  const toggle = (category: string) => {
-    setExpanded((prev) =>
-      prev.includes(category)
-        ? prev.filter((key) => key !== category)
-        : [...prev, category]
-    );
-  };
-
-  const categories = Array.from(new Set(services.map((s) => s.category)));
+  const services = (data ?? []) as Service[];
 
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="max-w-3xl mx-auto px-4 py-12 text-gray-800"
-    >
+    <main className="max-w-3xl mx-auto px-4 py-12 text-gray-800 animate-in fade-in duration-500">
       <h1 className="text-3xl sm:text-4xl font-bold text-center mb-2 mt-5">
         {t("title")}
       </h1>
@@ -61,58 +33,10 @@ export default function ServicesPage() {
         {t("subtitle")}
       </p>
 
-      {loading ? (
-        <Spinner label="Загружаем услуги..." />
-      ) : categories.length === 0 ? (
-        <p className="text-center text-gray-500">
-          Пока нет доступных услуг
-        </p>
-      ) : (
-        <section className="space-y-6">
-          {categories.map((category) => {
-            const items = services.filter((s) => s.category === category);
-            const isOpen = expanded.includes(category);
-            return (
-              <div
-                key={category}
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
-              >
-                <button
-                  className="w-full text-left p-5 sm:p-6 flex justify-between items-center text-lg sm:text-xl font-semibold"
-                  onClick={() => toggle(category)}
-                >
-                  <span>{category}</span>
-                  {isOpen ? (
-                    <ChevronUp className="w-5 h-5" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5" />
-                  )}
-                </button>
-                {isOpen && (
-                  <ul className="px-5 pb-5 sm:px-6 sm:pb-6 text-sm sm:text-base space-y-2 text-gray-700">
-                    {items.map((service) => (
-                      <li key={service.id} className="flex items-start gap-2">
-                        <span className="mt-0.5">•</span>
-                        <span>
-                          {service.name}
-                          {service.description && (
-                            <span className="block text-xs text-gray-500">
-                              {service.description}
-                            </span>
-                          )}
-                          {" — "}
-                          <strong>{formatPrice(service.price)}</strong>
-                          {service.unit && ` (${service.unit})`}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            );
-          })}
-        </section>
-      )}
+      <ServicesAccordion
+        services={services}
+        emptyLabel={t("noServicesAvailable")}
+      />
 
       <div className="mt-6">
         <iframe
@@ -131,7 +55,9 @@ export default function ServicesPage() {
           {t("contactUsForMoreInfo")}
         </p>
         <a
-          href="https://wa.me/77001234567?text=Здравствуйте!%20Хочу%20записаться%20на%20прогулку"
+          href={`https://wa.me/${whatsAppNumber}?text=${encodeURIComponent(
+            "Здравствуйте! Хочу узнать подробнее об услугах клуба."
+          )}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 bg-green-800 text-white font-semibold rounded-xl hover:bg-green-900 transition"
@@ -152,6 +78,6 @@ export default function ServicesPage() {
           Talgat Yessenbekov
         </a>
       </footer>
-    </motion.main>
+    </main>
   );
 }

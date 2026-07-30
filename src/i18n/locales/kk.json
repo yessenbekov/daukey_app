@@ -55,24 +55,10 @@
   "servicesPage": {
     "title": "Қызметтер мен бағалар",
     "subtitle": "Сізге ең қолайлы қызметті таңдаңыз",
-    "horseRiding": "Атпен жүру",
-    "clubTerritory": "Клуб аумағында жүру",
-    "ridingInMountains": "Тауда серуендеу",
-    "dependsOnRider": "Жүргізушінің тәжірибесіне байланысты",
-    "kokpar": "Кокпар",
-    "oneTimeVisit": "Бір рет бару",
-    "monthly": "1 айлық жазылым",
-    "halfYear": "Жарты жылдық жазылым",
-    "yearly": "1 жылдық жазылым",
-    "minutes": "минут",
-    "5timePerMonth": "Айына 5 рет",
-    "4timePerMonth": "Айына 4 рет",
-    "halfYearDescription": "26 рет 8500 KZT",
-    "yearlyDescription": "52 рет 7500 KZT",
+    "noServicesAvailable": "Қазіргі уақытта қызметтер жоқ",
     "readyForRidingOrTraining": "Атқа мінуге немесе жаттығуға дайынсызба?",
     "contactUsForMoreInfo": "Көбірек ақпарат алу үшін бізбен хабарласыңыз",
-    "writeWhatsapp": "WhatsApp-қа жазу",
-    "askedQuestions": "Жиі қойылатын сұрақтар"
+    "writeWhatsapp": "WhatsApp-қа жазу"
   },
   "horseDetailsPage": {
     "loading": "Жүктелуде...",

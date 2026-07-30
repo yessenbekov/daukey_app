@@ -8,19 +8,7 @@ import toast from "react-hot-toast";
 import { Horse } from "@/models";
 import { useTranslations } from "next-intl";
 import { whatsAppNumber } from "@/utils/constants";
-
-function convertToEmbedUrl(url: string): string {
-  if (url.includes("watch?v=")) {
-    return url.replace("watch?v=", "embed/");
-  } else if (url.includes("youtu.be/")) {
-    const id = url.split("youtu.be/")[1].split("?")[0];
-    return `https://www.youtube.com/embed/${id}`;
-  } else if (url.includes("youtube.com/shorts/")) {
-    const id = url.split("shorts/")[1].split("?")[0];
-    return `https://www.youtube.com/embed/${id}`;
-  }
-  return url;
-}
+import { toEmbedUrl } from "@/utils/embedUrl";
 
 export default function HorseDetailClient({ horse }: { horse: Horse }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -218,7 +206,7 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
             <div key={idx} className="aspect-video w-full">
               <iframe
                 loading="lazy"
-                src={convertToEmbedUrl(link)}
+                src={toEmbedUrl(link)}
                 title={`${horse.name} — видео ${idx + 1}`}
                 allowFullScreen
                 className="w-full h-full rounded"

@@ -61,19 +61,13 @@
     "writeWhatsapp": "Write to WhatsApp"
   },
   "horseDetailsPage": {
-    "loading": "Loading...",
     "notFound": "Horse not found",
     "backToList": "Back to list",
     "copyLink": "Copy link",
     "copied": "Link copied!",
     "shareWhatsApp": "Share on WhatsApp",
-    "status": {
-      "available": "Available",
-      "sold": "Sold"
-    },
     "breed": "Breed",
     "age": "Born year",
-    "years": "years",
     "price": "Price",
     "description": "Description",
     "videos": "Videos",

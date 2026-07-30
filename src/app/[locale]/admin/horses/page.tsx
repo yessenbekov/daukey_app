@@ -141,7 +141,6 @@ export default function AdminHorsesPage() {
       price: form.price ? Number(form.price) : null,
       photos: photoUrls,
       videos: videoLinks.filter(Boolean),
-      is_available: true,
       owner_id: ownerId || null,
     });
 

@@ -61,19 +61,13 @@
     "writeWhatsapp": "Написать в WhatsApp"
   },
   "horseDetailsPage": {
-    "loading": "Загрузка...",
     "notFound": "Лошадь не найдена",
     "backToList": "Назад к списку",
     "copyLink": "Скопировать ссылку",
     "copied": "Ссылка скопирована!",
     "shareWhatsApp": "Поделиться в WhatsApp",
-    "status": {
-      "available": "В наличии",
-      "sold": "Продано"
-    },
     "breed": "Порода",
     "age": "Год рождения",
-    "years": "лет",
     "price": "Цена",
     "description": "Описание",
     "videos": "Видео",

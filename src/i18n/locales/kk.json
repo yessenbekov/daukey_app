@@ -61,19 +61,13 @@
     "writeWhatsapp": "WhatsApp-қа жазу"
   },
   "horseDetailsPage": {
-    "loading": "Жүктелуде...",
     "notFound": "Жылқы табылмады",
     "backToList": "Тізімге оралу",
     "copyLink": "Сілтемені көшіру",
     "copied": "Сілтеме көшірілді!",
     "shareWhatsApp": "WhatsApp арқылы бөлісу",
-    "status": {
-      "available": "Қол жетімді",
-      "sold": "Сатылды"
-    },
     "breed": "Тұқымы",
     "age": "Туған жылы",
-    "years": "жас",
     "price": "Бағасы",
     "description": "Сипаттама",
     "videos": "Бейне",

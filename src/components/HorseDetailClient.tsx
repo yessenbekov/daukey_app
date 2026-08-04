@@ -106,13 +106,17 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
         </div>
       </div>
 
-      <p
-        className={`inline-block text-xs font-medium px-2 py-1 rounded-full text-white mb-4 ${
-          horse.owner_id ? "bg-gray-700" : "bg-green-800"
-        }`}
-      >
-        {horse.owner_id ? tHorses("statusPrivate") : tHorses("statusForSale")}
-      </p>
+      {horse.owner_id ? (
+        <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white mb-4 bg-gray-700">
+          {tHorses("statusPrivate")}
+        </p>
+      ) : (
+        horse.for_sale && (
+          <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white mb-4 bg-green-800">
+            {tHorses("statusForSale")}
+          </p>
+        )
+      )}
 
       {horse.photos?.length > 0 && (
         <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -187,7 +191,22 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
             <strong>{t("age")}:</strong> {horse.year}
           </p>
         )}
-        {horse.price != null && !horse.owner_id && (
+        {horse.color && (
+          <p>
+            <strong>{t("color")}:</strong> {horse.color}
+          </p>
+        )}
+        {horse.height != null && (
+          <p>
+            <strong>{t("height")}:</strong> {horse.height} см
+          </p>
+        )}
+        {horse.weight != null && (
+          <p>
+            <strong>{t("weight")}:</strong> {horse.weight} кг
+          </p>
+        )}
+        {horse.price != null && !horse.owner_id && horse.for_sale && (
           <p>
             <strong>{t("price")}:</strong> {horse.price.toLocaleString()} ₸
           </p>

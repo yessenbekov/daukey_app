@@ -228,7 +228,9 @@ export function Navbar() {
               </Link>
             )}
 
-            <LocaleSwitcher />
+            <div className="mt-3 pt-3 border-t border-white/15">
+              <LocaleSwitcher />
+            </div>
           </div>
         )}
       </nav>

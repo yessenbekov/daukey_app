@@ -19,21 +19,28 @@ interface Owner {
   full_name: string | null;
 }
 
+const emptyForm = {
+  name: "",
+  year: "",
+  breed: "",
+  color: "",
+  height: "",
+  weight: "",
+  description: "",
+  price: "",
+  for_sale: true,
+};
+
 export default function AdminHorsesPage() {
   const supabase = createClient();
   const router = useRouter();
   const { locale } = useParams();
   const { profile, loading: authLoading } = useAuth();
 
-  const [form, setForm] = useState({
-    name: "",
-    year: "",
-    breed: "",
-    description: "",
-    price: "",
-  });
+  const [form, setForm] = useState(emptyForm);
   const [ownerId, setOwnerId] = useState("");
   const [owners, setOwners] = useState<Owner[]>([]);
+  const [existingPhotos, setExistingPhotos] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [videoLinks, setVideoLinks] = useState<string[]>([""]);
@@ -92,14 +99,22 @@ export default function AdminHorsesPage() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
   };
 
-  const handleFileChange = (files: File[]) => {
-    setFiles(files);
-    const urls = files.map((f) => URL.createObjectURL(f));
-    setPreviews(urls);
+  // Каждый выбор файлов через input добавляется к уже выбранным, а не
+  // заменяет их — иначе повторное открытие проводника (чтобы добавить ещё
+  // фото) стирало бы то, что уже было выбрано.
+  const handleFileChange = (newFiles: File[]) => {
+    setFiles((prev) => [...prev, ...newFiles]);
+    setPreviews((prev) => [
+      ...prev,
+      ...newFiles.map((f) => URL.createObjectURL(f)),
+    ]);
   };
 
   const handleVideoChange = (index: number, value: string) => {
@@ -112,17 +127,26 @@ export default function AdminHorsesPage() {
     setVideoLinks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleRemovePreview = (index: number) => {
+  const handleRemoveExistingPhoto = (index: number) => {
+    setExistingPhotos((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveNewPreview = (index: number) => {
     setFiles((prev) => prev.filter((_, i) => i !== index));
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleAddHorse = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const resetFormState = () => {
+    setForm(emptyForm);
+    setOwnerId("");
+    setExistingPhotos([]);
+    setFiles([]);
+    setPreviews([]);
+    setVideoLinks([""]);
+  };
 
-    setLoading(true);
+  const uploadNewFiles = async () => {
     const photoUrls: string[] = [];
-
     for (const file of files) {
       const ext = file.name.split(".").pop();
       const fileName = `${uuidv4()}.${ext}`;
@@ -134,25 +158,36 @@ export default function AdminHorsesPage() {
         photoUrls.push(data.publicUrl);
       }
     }
+    return photoUrls;
+  };
 
-    const { error } = await supabase.from("horses").insert({
-      ...form,
-      year: Number(form.year),
-      price: form.price ? Number(form.price) : null,
-      photos: photoUrls,
-      videos: videoLinks.filter(Boolean),
-      owner_id: ownerId || null,
-    });
+  const buildPayload = (uploadedUrls: string[]) => ({
+    name: form.name,
+    year: Number(form.year),
+    breed: form.breed,
+    color: form.color || null,
+    height: form.height ? Number(form.height) : null,
+    weight: form.weight ? Number(form.weight) : null,
+    description: form.description,
+    price: form.price ? Number(form.price) : null,
+    for_sale: form.for_sale,
+    photos: [...existingPhotos, ...uploadedUrls],
+    videos: videoLinks.filter(Boolean),
+    owner_id: ownerId || null,
+  });
+
+  const handleAddHorse = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const uploadedUrls = await uploadNewFiles();
+    const { error } = await supabase.from("horses").insert(buildPayload(uploadedUrls));
 
     if (error) toast.error("Ошибка добавления");
     else {
       toast.success("Лошадь добавлена");
       router.refresh();
-      setForm({ name: "", year: "", breed: "", description: "", price: "" });
-      setOwnerId("");
-      setFiles([]);
-      setPreviews([]);
-      setVideoLinks([""]);
+      resetFormState();
       fetchHorses();
     }
     setLoading(false);
@@ -162,46 +197,18 @@ export default function AdminHorsesPage() {
     e.preventDefault();
     if (!editingHorse) return;
     setLoading(true);
-    let photoUrls = editingHorse.photos || [];
 
-    if (files.length) {
-      photoUrls = [];
-      for (const file of files) {
-        const ext = file.name.split(".").pop();
-        const fileName = `${uuidv4()}.${ext}`;
-        const { error } = await supabase.storage
-          .from("horses")
-          .upload(fileName, file);
-        if (!error) {
-          const { data } = supabase.storage
-            .from("horses")
-            .getPublicUrl(fileName);
-          photoUrls.push(data.publicUrl);
-        }
-      }
-    }
-
+    const uploadedUrls = await uploadNewFiles();
     const { error } = await supabase
       .from("horses")
-      .update({
-        ...form,
-        year: Number(form.year),
-        price: form.price ? Number(form.price) : null,
-        photos: photoUrls,
-        videos: videoLinks.filter(Boolean),
-        owner_id: ownerId || null,
-      })
+      .update(buildPayload(uploadedUrls))
       .eq("id", editingHorse.id);
 
     if (error) toast.error("Ошибка обновления");
     else {
       toast.success("Обновлено");
       setEditingHorse(null);
-      setForm({ name: "", year: "", breed: "", description: "", price: "" });
-      setOwnerId("");
-      setFiles([]);
-      setPreviews([]);
-      setVideoLinks([""]);
+      resetFormState();
       fetchHorses();
     }
     setLoading(false);
@@ -210,7 +217,6 @@ export default function AdminHorsesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Удалить?")) return;
 
-    console.log("Удаление:", id);
     const { error } = await supabase.from("horses").delete().eq("id", id);
     if (!error) {
       toast.success("Удалено");
@@ -223,13 +229,19 @@ export default function AdminHorsesPage() {
     setForm({
       name: horse.name,
       year: String(horse.year),
-      breed: horse.breed,
-      description: horse.description,
+      breed: horse.breed || "",
+      color: horse.color || "",
+      height: horse.height != null ? String(horse.height) : "",
+      weight: horse.weight != null ? String(horse.weight) : "",
+      description: horse.description || "",
       price: horse.price != null ? String(horse.price) : "",
+      for_sale: horse.for_sale,
     });
     setOwnerId(horse.owner_id || "");
-    setVideoLinks(horse.videos || [""]);
-    setPreviews(horse.photos || []);
+    setVideoLinks(horse.videos?.length ? horse.videos : [""]);
+    setExistingPhotos(horse.photos || []);
+    setFiles([]);
+    setPreviews([]);
     setShowForm(true);
   };
 
@@ -249,7 +261,13 @@ export default function AdminHorsesPage() {
       />
 
       <button
-        onClick={() => setShowForm((prev) => !prev)}
+        onClick={() => {
+          if (showForm) {
+            setEditingHorse(null);
+            resetFormState();
+          }
+          setShowForm((prev) => !prev);
+        }}
         className="mb-4 px-4 py-2 bg-black text-white rounded"
       >
         {showForm
@@ -262,7 +280,8 @@ export default function AdminHorsesPage() {
       {showForm && (
         <HorseForm
           form={form}
-          previews={previews}
+          existingPhotos={existingPhotos}
+          newPreviews={previews}
           videoLinks={videoLinks}
           loading={loading}
           isEdit={!!editingHorse}
@@ -273,13 +292,15 @@ export default function AdminHorsesPage() {
           onFileChange={(e) =>
             handleFileChange(e.target.files ? Array.from(e.target.files) : [])
           }
+          onRemoveExistingPhoto={handleRemoveExistingPhoto}
+          onRemoveNewPreview={handleRemoveNewPreview}
           onVideoChange={handleVideoChange}
           onVideoRemove={handleRemoveVideo}
-          onPreviewRemove={handleRemovePreview}
           onAddVideo={addVideoField}
           onSubmit={editingHorse ? handleUpdate : handleAddHorse}
           onCancel={() => {
             setEditingHorse(null);
+            resetFormState();
             setShowForm(false);
           }}
         />

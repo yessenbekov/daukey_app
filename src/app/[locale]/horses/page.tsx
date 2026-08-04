@@ -83,7 +83,7 @@ export default function HorsesPage() {
     const matchesStatus = selectedStatus
       ? selectedStatus === "private"
         ? Boolean(h.owner_id)
-        : !h.owner_id
+        : !h.owner_id && h.for_sale
       : true;
     const matchesSearch = search.trim()
       ? h.name.toLowerCase().includes(search.trim().toLowerCase())
@@ -242,13 +242,17 @@ export default function HorsesPage() {
                         </span>
                       </div>
                     )}
-                    <span
-                      className={`absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white ${
-                        horse.owner_id ? "bg-gray-700" : "bg-green-800"
-                      }`}
-                    >
-                      {horse.owner_id ? t("statusPrivate") : t("statusForSale")}
-                    </span>
+                    {horse.owner_id ? (
+                      <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white bg-gray-700">
+                        {t("statusPrivate")}
+                      </span>
+                    ) : (
+                      horse.for_sale && (
+                        <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white bg-green-800">
+                          {t("statusForSale")}
+                        </span>
+                      )
+                    )}
                   </div>
                   <div className="p-4 pb-2">
                     <h2 className="text-xl font-bold mb-2">{horse.name}</h2>
@@ -261,7 +265,7 @@ export default function HorsesPage() {
                         {horse.description}
                       </p>
                     )}
-                    {horse.price != null && !horse.owner_id && (
+                    {horse.price != null && !horse.owner_id && horse.for_sale && (
                       <p className="text-green-700 font-bold">
                         {horse.price.toLocaleString("ru-RU")} ₸
                       </p>

@@ -13,4 +13,5 @@ export interface Horse {
   status?: string;
   year: number;
   owner_id?: string | null;
+  for_sale: boolean;
 }

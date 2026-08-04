@@ -12,10 +12,15 @@ interface Props {
     name: string;
     year: string;
     breed: string;
+    color: string;
+    height: string;
+    weight: string;
     description: string;
     price: string;
+    for_sale: boolean;
   };
-  previews: string[];
+  existingPhotos: string[];
+  newPreviews: string[];
   videoLinks: string[];
   loading: boolean;
   isEdit?: boolean;
@@ -26,9 +31,10 @@ interface Props {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveExistingPhoto: (index: number) => void;
+  onRemoveNewPreview: (index: number) => void;
   onVideoChange: (index: number, value: string) => void;
   onVideoRemove: (index: number) => void;
-  onPreviewRemove: (index: number) => void;
   onAddVideo: () => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel?: () => void;
@@ -36,7 +42,8 @@ interface Props {
 
 export default function HorseForm({
   form,
-  previews,
+  existingPhotos,
+  newPreviews,
   videoLinks,
   loading,
   isEdit = false,
@@ -45,9 +52,10 @@ export default function HorseForm({
   onOwnerChange,
   onChange,
   onFileChange,
+  onRemoveExistingPhoto,
+  onRemoveNewPreview,
   onVideoChange,
   onVideoRemove,
-  onPreviewRemove,
   onAddVideo,
   onSubmit,
   onCancel,
@@ -87,6 +95,29 @@ export default function HorseForm({
           value={form.breed}
           onChange={onChange}
         />
+        <input
+          name="color"
+          placeholder="Окрас"
+          className="p-2 border rounded w-full"
+          value={form.color}
+          onChange={onChange}
+        />
+        <input
+          name="height"
+          placeholder="Рост (см)"
+          type="number"
+          className="p-2 border rounded w-full"
+          value={form.height}
+          onChange={onChange}
+        />
+        <input
+          name="weight"
+          placeholder="Вес (кг)"
+          type="number"
+          className="p-2 border rounded w-full"
+          value={form.weight}
+          onChange={onChange}
+        />
         <PriceInput
           name="price"
           placeholder="Цена (₸, необязательно)"
@@ -115,6 +146,17 @@ export default function HorseForm({
         </div>
       )}
 
+      {/* Продажа */}
+      <label className="flex items-center gap-2 text-sm font-medium">
+        <input
+          type="checkbox"
+          name="for_sale"
+          checked={form.for_sale}
+          onChange={onChange}
+        />
+        Выставлена на продажу
+      </label>
+
       {/* Описание */}
       <textarea
         name="description"
@@ -137,21 +179,44 @@ export default function HorseForm({
           onChange={onFileChange}
           className="w-full p-2 border rounded"
         />
-        {previews.length > 0 && (
+        {(existingPhotos.length > 0 || newPreviews.length > 0) && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-3">
-            {previews.map((src, idx) => (
-              <div key={idx} className="relative group">
+            {existingPhotos.map((src, idx) => (
+              <div key={`existing-${src}`} className="relative group">
                 <Image
                   width={300}
                   height={200}
                   loading="lazy"
                   src={src}
-                  alt={`preview-${idx}`}
+                  alt={`фото ${idx + 1}`}
                   className="h-32 w-full object-cover rounded border"
                 />
                 <button
                   type="button"
-                  onClick={() => onPreviewRemove(idx)}
+                  onClick={() => onRemoveExistingPhoto(idx)}
+                  className="absolute top-1 right-1 bg-white/80 rounded-full px-2 text-sm text-red-600 opacity-0 group-hover:opacity-100 transition"
+                  title="Удалить"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+            {newPreviews.map((src, idx) => (
+              <div key={`new-${idx}`} className="relative group">
+                <Image
+                  width={300}
+                  height={200}
+                  loading="lazy"
+                  src={src}
+                  alt={`новое фото ${idx + 1}`}
+                  className="h-32 w-full object-cover rounded border border-blue-300"
+                />
+                <span className="absolute bottom-1 left-1 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded">
+                  новое
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onRemoveNewPreview(idx)}
                   className="absolute top-1 right-1 bg-white/80 rounded-full px-2 text-sm text-red-600 opacity-0 group-hover:opacity-100 transition"
                   title="Удалить"
                 >

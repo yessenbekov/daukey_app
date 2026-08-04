@@ -43,7 +43,7 @@ export default async function RootLayout({
   return (
     <html lang={detectedLocale}>
       <head>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href={`/${detectedLocale}/manifest.webmanifest`} />
         <meta name="theme-color" content="#ffffff" />
         <link rel="icon" href="/icons/icon-192x192.png" />
         <meta name="mobile-web-app-capable" content="yes" />

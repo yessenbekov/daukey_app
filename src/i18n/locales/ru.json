@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Daukey App",
+    "description": "Закрытый конный клуб Daukey"
+  },
   "navbar": {
     "home": "Главная",
     "horses": "Лошади клуба",

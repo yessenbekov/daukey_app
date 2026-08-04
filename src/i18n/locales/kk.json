@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Daukey App",
+    "description": "Daukey — жабық ат клубы"
+  },
   "navbar": {
     "home": "Басты бет",
     "horses": "Клуб аттары",

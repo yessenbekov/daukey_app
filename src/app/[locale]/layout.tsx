@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
+import type { Metadata } from "next";
 import { Golos_Text } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
 import RegisterSW from "@/components/RegisterSW";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -14,10 +15,19 @@ const golosText = Golos_Text({
   variable: "--font-sans",
 });
 
-export const metadata = {
-  title: "Daukey App",
-  description: "Продажа лошадей онлайн",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 export default async function RootLayout({
   children,

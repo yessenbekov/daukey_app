@@ -1,7 +1,7 @@
 {
   "name": "Daukey App",
   "short_name": "Daukey App",
-  "description": "Продажа лошадей онлайн",
+  "description": "Закрытый конный клуб Daukey",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",

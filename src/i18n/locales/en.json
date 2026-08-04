@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Daukey App",
+    "description": "Daukey — a private equestrian club"
+  },
   "navbar": {
     "home": "Home",
     "horses": "Club Horses",

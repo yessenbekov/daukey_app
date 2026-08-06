@@ -7,6 +7,7 @@ import HorseOwnerEditPanel from "@/components/HorseOwnerEditPanel";
 import ProfileEditPanel from "@/components/ProfileEditPanel";
 import LogoutButton from "@/components/LogoutButton";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
+import TrainingRsvpBoard from "@/components/TrainingRsvpBoard";
 import { formatPeriod } from "@/utils/formatPeriod";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -143,6 +144,11 @@ export default async function DashboardPage({
       </div>
 
       <ProfileEditPanel profile={profile} email={user.email ?? ""} />
+
+      <TrainingRsvpBoard
+        userId={user.id}
+        fullName={profile.full_name || user.email || "Участник"}
+      />
 
       <h2 className="text-xl font-semibold mb-4">{t("myHorses")}</h2>
 

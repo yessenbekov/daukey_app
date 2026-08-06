@@ -11,6 +11,7 @@ export default function AdminNav() {
     { href: `/${locale}/admin/horses`, label: "Лошади" },
     { href: `/${locale}/admin/services`, label: "Услуги" },
     { href: `/${locale}/admin/videos`, label: "Видео" },
+    { href: `/${locale}/admin/trainings`, label: "Тренировки" },
     { href: `/${locale}/admin/users`, label: "Пользователи" },
   ];
 

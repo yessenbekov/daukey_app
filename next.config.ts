@@ -37,6 +37,7 @@ const withPWAConfig = withPWA({
   register: true,
   skipWaiting: true,
   disable: isDev, // 💥 отключает PWA в dev
+  swSrc: "src/worker/sw.js", // свой SW — нужен для обработки push-уведомлений
 });
 
 export default withNextIntl(withPWAConfig(nextConfig));

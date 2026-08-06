@@ -8,6 +8,7 @@ import ProfileEditPanel from "@/components/ProfileEditPanel";
 import LogoutButton from "@/components/LogoutButton";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
 import TrainingRsvpBoard from "@/components/TrainingRsvpBoard";
+import PushNotificationToggle from "@/components/PushNotificationToggle";
 import { formatPeriod } from "@/utils/formatPeriod";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -138,9 +139,13 @@ export default async function DashboardPage({
 
   return (
     <div className="container max-w-4xl mx-auto py-24 px-4">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3">
         <h1 className="text-2xl font-bold">{t("title")}</h1>
         <LogoutButton label={t("logout")} />
+      </div>
+
+      <div className="mb-6">
+        <PushNotificationToggle userId={user.id} />
       </div>
 
       <ProfileEditPanel profile={profile} email={user.email ?? ""} />

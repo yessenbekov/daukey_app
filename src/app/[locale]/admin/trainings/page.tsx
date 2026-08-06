@@ -79,14 +79,38 @@ export default function AdminTrainingsPage() {
     if (isAdmin) fetchTrainings();
   }, [isAdmin]);
 
+  const notifyAboutTraining = async (trainingTitle: string, iso: string) => {
+    try {
+      const res = await fetch("/api/push/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: trainingTitle,
+          body: `${formatDateTime(iso)} — отметьтесь, придёте?`,
+          url: `/${locale}/dashboard`,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        toast.success(`Уведомление отправлено (${result.sent} из ${result.total})`);
+      }
+    } catch {
+      // Уведомление — best effort: тренировка уже создана и видна в
+      // приложении, даже если рассылка push не удалась.
+    }
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!startsAt) return;
     setSaving(true);
 
+    const finalTitle = title.trim() || "Кокпар";
+    const iso = new Date(startsAt).toISOString();
+
     const { error } = await supabase.from("trainings").insert({
-      title: title.trim() || "Кокпар",
-      starts_at: new Date(startsAt).toISOString(),
+      title: finalTitle,
+      starts_at: iso,
       created_by: profile?.id,
     });
 
@@ -95,6 +119,7 @@ export default function AdminTrainingsPage() {
       toast.success("Тренировка создана");
       setStartsAt("");
       fetchTrainings();
+      notifyAboutTraining(finalTitle, iso);
     }
     setSaving(false);
   };

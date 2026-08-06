@@ -2,6 +2,16 @@ import { precacheAndRoute } from "workbox-precaching";
 
 precacheAndRoute(self.__WB_MANIFEST);
 
+// В отличие от режима автогенерации next-pwa (который раньше собирал этот
+// файл сам), при своём swSrc next-pwa больше не подставляет skipWaiting/
+// clientsClaim за нас — без них новый SW зависает в "waiting" и не берёт
+// на себя управление уже открытой страницей, из-за чего
+// navigator.serviceWorker.ready никогда не резолвится на клиенте.
+self.skipWaiting();
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener("push", (event) => {
   let payload = {};
   try {

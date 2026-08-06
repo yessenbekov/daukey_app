@@ -1,6 +1,14 @@
-import { precacheAndRoute } from "workbox-precaching";
-
-precacheAndRoute(self.__WB_MANIFEST);
+// InjectManifest (webpack-плагин Workbox) требует, чтобы self.__WB_MANIFEST
+// где-то встречался в исходнике — иначе сборка падает. Но саму
+// precacheAndRoute() сознательно не вызываем: она на install скачивает
+// СРАЗУ ВСЕ файлы из манифеста через Promise.all, и если хоть один не
+// загрузится (нестабильная мобильная сеть, единичный 404), весь install
+// целиком проваливается и SW никогда не доходит до "activated" —
+// navigator.serviceWorker.ready на странице ждёт вечно. Офлайн-кеширование
+// нам не нужно, а push должен быть максимально надёжным, поэтому просто
+// "используем" переменную и не кешируем ничего на install.
+// eslint-disable-next-line no-unused-vars
+const __precacheManifest = self.__WB_MANIFEST;
 
 // В отличие от режима автогенерации next-pwa (который раньше собирал этот
 // файл сам), при своём swSrc next-pwa больше не подставляет skipWaiting/

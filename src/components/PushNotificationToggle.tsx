@@ -10,6 +10,19 @@ const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
 type Status = "unsupported" | "loading" | "subscribed" | "unsubscribed";
 
+// navigator.serviceWorker.ready может зависнуть навсегда (например, если
+// регистрация SW в RegisterSW.tsx по какой-то причине не удалась) — без
+// таймаута кнопка осталась бы задизейбленной бесконечно, без единого
+// сообщения о причине.
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), ms)
+    ),
+  ]);
+}
+
 export default function PushNotificationToggle({ userId }: { userId: string }) {
   const supabase = createClient();
   const [status, setStatus] = useState<Status>("loading");
@@ -26,9 +39,14 @@ export default function PushNotificationToggle({ userId }: { userId: string }) {
         return;
       }
 
-      const registration = await navigator.serviceWorker.ready;
-      const existing = await registration.pushManager.getSubscription();
-      setStatus(existing ? "subscribed" : "unsubscribed");
+      try {
+        const registration = await withTimeout(navigator.serviceWorker.ready, 8000);
+        const existing = await registration.pushManager.getSubscription();
+        setStatus(existing ? "subscribed" : "unsubscribed");
+      } catch (err) {
+        console.error("[push] status check failed", err);
+        setStatus("unsubscribed");
+      }
     };
 
     checkStatus();
@@ -38,15 +56,15 @@ export default function PushNotificationToggle({ userId }: { userId: string }) {
     if (!VAPID_PUBLIC_KEY) return;
     setStatus("loading");
 
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      toast.error("Уведомления не разрешены в браузере");
-      setStatus("unsubscribed");
-      return;
-    }
-
     try {
-      const registration = await navigator.serviceWorker.ready;
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") {
+        toast.error("Уведомления не разрешены в браузере");
+        setStatus("unsubscribed");
+        return;
+      }
+
+      const registration = await withTimeout(navigator.serviceWorker.ready, 8000);
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
@@ -67,8 +85,13 @@ export default function PushNotificationToggle({ userId }: { userId: string }) {
 
       toast.success("Уведомления включены");
       setStatus("subscribed");
-    } catch {
-      toast.error("Не удалось включить уведомления");
+    } catch (err) {
+      console.error("[push] subscribe failed", err);
+      toast.error(
+        err instanceof Error && err.message === "timeout"
+          ? "Не удалось подключиться к service worker (таймаут)"
+          : "Не удалось включить уведомления"
+      );
       setStatus("unsubscribed");
     }
   };
@@ -76,7 +99,7 @@ export default function PushNotificationToggle({ userId }: { userId: string }) {
   const unsubscribe = async () => {
     setStatus("loading");
     try {
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await withTimeout(navigator.serviceWorker.ready, 8000);
       const existing = await registration.pushManager.getSubscription();
       if (existing) {
         await supabase
@@ -87,7 +110,8 @@ export default function PushNotificationToggle({ userId }: { userId: string }) {
       }
       toast.success("Уведомления отключены");
       setStatus("unsubscribed");
-    } catch {
+    } catch (err) {
+      console.error("[push] unsubscribe failed", err);
       toast.error("Не удалось отключить уведомления");
       setStatus("subscribed");
     }

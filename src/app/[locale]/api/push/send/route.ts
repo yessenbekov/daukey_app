@@ -22,9 +22,25 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
 
-  // RLS на push_subscriptions разрешает select только is_admin() — если
-  // вызвал не админ, здесь просто окажется пустой список и рассылка
-  // молча ничего не отправит (без отдельной проверки роли).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, status")
+    .eq("id", user.id)
+    .single();
+  const isAdmin = profile?.role === "admin" && profile?.status === "approved";
+  if (!isAdmin) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // RLS на push_subscriptions тоже разрешает select только is_admin() —
+  // проверка выше просто даёт понятную ошибку вместо тихой пустой рассылки.
   const { data, error } = await supabase.from("push_subscriptions").select("*");
 
   if (error) {

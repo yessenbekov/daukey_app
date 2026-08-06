@@ -81,7 +81,7 @@ export default function AdminTrainingsPage() {
 
   const notifyAboutTraining = async (trainingTitle: string, iso: string) => {
     try {
-      const res = await fetch("/api/push/send", {
+      const res = await fetch(`/${locale}/api/push/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

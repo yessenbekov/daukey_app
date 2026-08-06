@@ -80,7 +80,7 @@ export default function ServicesAccordion({
                     <TableBody>
                       {group.items.map((service) => (
                         <TableRow key={service.id}>
-                          <TableCell className="align-top">
+                          <TableCell className="align-top whitespace-normal">
                             <div className="font-medium">{service.name}</div>
                             {service.description && (
                               <div className="text-xs text-muted-foreground mt-0.5">

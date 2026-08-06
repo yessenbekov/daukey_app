@@ -152,7 +152,7 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
                       <TableCell className="h-9 px-2 text-xs font-medium">
                         {p.amount.toLocaleString("ru-RU")} ₸
                       </TableCell>
-                      <TableCell className="h-9 px-2 text-xs text-muted-foreground">
+                      <TableCell className="h-9 px-2 text-xs text-muted-foreground whitespace-normal">
                         {p.note || "—"}
                       </TableCell>
                     </TableRow>

@@ -235,7 +235,7 @@ export default async function DashboardPage({
                               <TableCell className="px-3 text-sm font-medium">
                                 {p.amount.toLocaleString("ru-RU")} ₸
                               </TableCell>
-                              <TableCell className="px-3 text-sm text-muted-foreground">
+                              <TableCell className="px-3 text-sm text-muted-foreground whitespace-normal">
                                 {p.note || "—"}
                               </TableCell>
                             </TableRow>

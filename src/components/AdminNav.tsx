@@ -18,7 +18,7 @@ export default function AdminNav() {
 
   return (
     <div
-      className="flex gap-2 mb-6 border-b"
+      className="flex gap-2 mb-6 border-b overflow-x-auto"
       style={{ marginTop: "60px" }}
     >
       {tabs.map((tab) => {
@@ -27,7 +27,7 @@ export default function AdminNav() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 ${
+            className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 whitespace-nowrap ${
               isActive
                 ? "border-black text-black"
                 : "border-transparent text-gray-500 hover:text-gray-800"

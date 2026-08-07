@@ -123,6 +123,15 @@ export default function AdminReportsPage() {
   const paidCount = periodRows.filter((r) => r.paid).length;
   const unpaidCount = periodRows.length - paidCount;
 
+  const [periodFilter, setPeriodFilter] = useState<"all" | "paid" | "unpaid">(
+    "all"
+  );
+  const filteredPeriodRows = useMemo(() => {
+    if (periodFilter === "paid") return periodRows.filter((r) => r.paid);
+    if (periodFilter === "unpaid") return periodRows.filter((r) => !r.paid);
+    return periodRows;
+  }, [periodRows, periodFilter]);
+
   // --- История по лошади ---
   const [selectedHorseId, setSelectedHorseId] = useState("");
   const [horsePayments, setHorsePayments] = useState<Payment[]>([]);
@@ -165,17 +174,36 @@ export default function AdminReportsPage() {
           <section className="mb-10">
             <h2 className="text-xl font-semibold mb-4">Оплаты за период</h2>
 
-            <div className="flex items-center gap-2 mb-4">
-              <label htmlFor="report-period" className="text-sm font-medium">
-                Месяц
-              </label>
-              <input
-                id="report-period"
-                type="month"
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-                className="p-2 border rounded"
-              />
+            <div className="flex flex-wrap items-center gap-4 mb-4">
+              <div className="flex items-center gap-2">
+                <label htmlFor="report-period" className="text-sm font-medium">
+                  Месяц
+                </label>
+                <input
+                  id="report-period"
+                  type="month"
+                  value={period}
+                  onChange={(e) => setPeriod(e.target.value)}
+                  className="p-2 border rounded"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="report-status" className="text-sm font-medium">
+                  Статус
+                </label>
+                <select
+                  id="report-status"
+                  value={periodFilter}
+                  onChange={(e) =>
+                    setPeriodFilter(e.target.value as "all" | "paid" | "unpaid")
+                  }
+                  className="p-2 border rounded"
+                >
+                  <option value="all">Все</option>
+                  <option value="paid">Оплачено</option>
+                  <option value="unpaid">Не оплачено</option>
+                </select>
+              </div>
             </div>
 
             {periodLoading ? (
@@ -185,61 +213,77 @@ export default function AdminReportsPage() {
             ) : (
               <>
                 <div className="flex flex-wrap gap-4 mb-4 text-sm">
-                  <div className="px-3 py-2 rounded bg-green-50 text-green-800">
+                  <button
+                    type="button"
+                    onClick={() => setPeriodFilter("paid")}
+                    className={`px-3 py-2 rounded bg-green-50 text-green-800 ${
+                      periodFilter === "paid" ? "ring-2 ring-green-600" : ""
+                    }`}
+                  >
                     Оплатили: <strong>{paidCount}</strong>
-                  </div>
-                  <div className="px-3 py-2 rounded bg-rose-50 text-rose-800">
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPeriodFilter("unpaid")}
+                    className={`px-3 py-2 rounded bg-rose-50 text-rose-800 ${
+                      periodFilter === "unpaid" ? "ring-2 ring-rose-600" : ""
+                    }`}
+                  >
                     Не оплатили: <strong>{unpaidCount}</strong>
-                  </div>
+                  </button>
                   <div className="px-3 py-2 rounded bg-gray-100 text-gray-800">
                     Собрано за {formatPeriod(period)}: <strong>{formatAmount(periodTotal)}</strong>
                   </div>
                 </div>
 
-                <div className="rounded-lg border bg-card overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-b hover:bg-transparent">
-                        <TableHead className="h-12 px-4 font-medium">Лошадь</TableHead>
-                        <TableHead className="h-12 px-4 font-medium">Владелец</TableHead>
-                        <TableHead className="h-12 px-4 font-medium">Статус</TableHead>
-                        <TableHead className="h-12 px-4 font-medium">Сумма</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {periodRows.map(({ horse, ownerName, total, paid }) => (
-                        <TableRow key={horse.id} className="hover:bg-muted/50">
-                          <TableCell className="h-14 px-4 font-medium">
-                            {horse.name}
-                          </TableCell>
-                          <TableCell className="h-14 px-4 text-muted-foreground text-sm">
-                            {ownerName}
-                          </TableCell>
-                          <TableCell className="h-14 px-4">
-                            {paid ? (
-                              <Badge
-                                variant="outline"
-                                className="border-0 bg-green-500/15 text-green-700"
-                              >
-                                Оплачено
-                              </Badge>
-                            ) : (
-                              <Badge
-                                variant="outline"
-                                className="border-0 bg-rose-500/15 text-rose-700"
-                              >
-                                Не оплачено
-                              </Badge>
-                            )}
-                          </TableCell>
-                          <TableCell className="h-14 px-4 text-sm">
-                            {paid ? formatAmount(total) : "—"}
-                          </TableCell>
+                {filteredPeriodRows.length === 0 ? (
+                  <p className="text-gray-500">Нет лошадей с таким статусом за этот период</p>
+                ) : (
+                  <div className="rounded-lg border bg-card overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-b hover:bg-transparent">
+                          <TableHead className="h-12 px-4 font-medium">Лошадь</TableHead>
+                          <TableHead className="h-12 px-4 font-medium">Владелец</TableHead>
+                          <TableHead className="h-12 px-4 font-medium">Статус</TableHead>
+                          <TableHead className="h-12 px-4 font-medium">Сумма</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredPeriodRows.map(({ horse, ownerName, total, paid }) => (
+                          <TableRow key={horse.id} className="hover:bg-muted/50">
+                            <TableCell className="h-14 px-4 font-medium">
+                              {horse.name}
+                            </TableCell>
+                            <TableCell className="h-14 px-4 text-muted-foreground text-sm">
+                              {ownerName}
+                            </TableCell>
+                            <TableCell className="h-14 px-4">
+                              {paid ? (
+                                <Badge
+                                  variant="outline"
+                                  className="border-0 bg-green-500/15 text-green-700"
+                                >
+                                  Оплачено
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="border-0 bg-rose-500/15 text-rose-700"
+                                >
+                                  Не оплачено
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="h-14 px-4 text-sm">
+                              {paid ? formatAmount(total) : "—"}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
               </>
             )}
           </section>

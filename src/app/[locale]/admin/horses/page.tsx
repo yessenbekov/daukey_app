@@ -70,7 +70,6 @@ export default function AdminHorsesPage() {
       const { data } = await supabase
         .from("profiles")
         .select("id, full_name")
-        .eq("role", "owner")
         .eq("status", "approved");
       setOwners((data || []) as Owner[]);
     };

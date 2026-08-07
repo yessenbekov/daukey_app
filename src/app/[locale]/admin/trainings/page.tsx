@@ -87,7 +87,7 @@ export default function AdminTrainingsPage() {
         body: JSON.stringify({
           title: trainingTitle,
           body: `${formatDateTime(iso)} — отметьтесь, придёте?`,
-          url: `/${locale}/dashboard`,
+          url: `/${locale}/dashboard/notifications`,
         }),
       });
       const result = await res.json();

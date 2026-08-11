@@ -17,6 +17,7 @@ export function Navbar() {
 
   const isHome = pathname === `/${locale}`;
   const isHorses = pathname.startsWith(`/${locale}/horses`);
+  const isMembers = pathname.startsWith(`/${locale}/members`);
   const isServices = pathname.startsWith(`/${locale}/services`);
   const isAdminPage = pathname.startsWith(`/${locale}/admin`);
   const isAccountPage =
@@ -81,6 +82,21 @@ export function Navbar() {
                 {t("horses")}
               </span>
             </Link>
+
+            {isAdmin && (
+              <Link href={`/${locale}/members`} className={navItemClass}>
+                {isMembers && <span className="text-primary">•</span>}
+                <span
+                  className={`${
+                    isMembers
+                      ? "font-semibold underline underline-offset-4"
+                      : "hover:opacity-70"
+                  }`}
+                >
+                  Члены клуба
+                </span>
+              </Link>
+            )}
 
             <Link href={`/${locale}/services`} className={navItemClass}>
               {isServices && <span className="text-primary">•</span>}
@@ -174,6 +190,25 @@ export function Navbar() {
                 {t("horses")}
               </span>
             </Link>
+
+            {isAdmin && (
+              <Link
+                href={`/${locale}/members`}
+                onClick={handleNavClick}
+                className={`${navItemClass} py-1`}
+              >
+                {isMembers && <span className="text-primary">•</span>}
+                <span
+                  className={`${
+                    isMembers
+                      ? "font-semibold underline underline-offset-4"
+                      : "hover:underline"
+                  }`}
+                >
+                  Члены клуба
+                </span>
+              </Link>
+            )}
 
             <Link
               href={`/${locale}/services`}

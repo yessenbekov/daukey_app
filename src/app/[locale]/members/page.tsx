@@ -16,7 +16,7 @@ function calcAge(birthDate: string | null) {
   return age;
 }
 
-export default async function DashboardMembersPage({
+export default async function MembersPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
@@ -24,8 +24,9 @@ export default async function DashboardMembersPage({
   const { locale } = await params;
   const supabase = await createClient();
 
-  // Доступ к самим данным уже стережёт is_admin() внутри get_club_members(),
-  // но не-админа лучше сразу увести обратно, а не показать пустой список.
+  // Вкладка пока доступна только админам. Доступ к самим данным уже
+  // стережёт is_admin() внутри get_club_members(), но не-админа лучше
+  // сразу увести на главную, а не показать пустой список.
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -36,14 +37,14 @@ export default async function DashboardMembersPage({
     .single();
   const profile = profileData as Profile | null;
   const isAdmin = profile?.role === "admin" && profile?.status === "approved";
-  if (!isAdmin) redirect(`/${locale}/dashboard`);
+  if (!isAdmin) redirect(`/${locale}`);
 
   const { data } = await supabase.rpc("get_club_members");
   const members = (data || []) as ClubMember[];
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Члены клуба</h2>
+    <div className="container max-w-6xl mx-auto py-10 pt-24">
+      <h1 className="text-3xl font-bold mb-6">Члены клуба</h1>
 
       {members.length === 0 ? (
         <p className="text-gray-500">Пока нет одобренных членов клуба</p>

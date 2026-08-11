@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { registerSchema } from "@/lib/validation/auth";
+import { formatPhoneMask } from "@/utils/formatPhone";
 
 export default function RegisterPage() {
   const supabase = createClient();
@@ -26,6 +27,10 @@ export default function RegisterPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, phone: formatPhoneMask(e.target.value) }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,10 +108,11 @@ export default function RegisterPage() {
         />
         <input
           type="tel"
+          inputMode="numeric"
           name="phone"
-          placeholder={t("phoneLabel")}
+          placeholder="+7 702 1234567"
           value={form.phone}
-          onChange={handleChange}
+          onChange={handlePhoneChange}
           required
           className="p-2 border rounded w-full"
         />

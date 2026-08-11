@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { Profile } from "@/models";
 import LogoutButton from "@/components/LogoutButton";
+import { formatPhoneMask } from "@/utils/formatPhone";
 
 export default function CompleteProfileForm({
   profile,
@@ -81,9 +82,10 @@ export default function CompleteProfileForm({
         />
         <input
           type="tel"
-          placeholder="Телефон"
+          inputMode="numeric"
+          placeholder="+7 702 1234567"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(formatPhoneMask(e.target.value))}
           required
           className="p-2 border rounded w-full"
         />

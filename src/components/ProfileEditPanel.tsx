@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { Profile } from "@/models";
+import { formatPhoneMask } from "@/utils/formatPhone";
 
 export default function ProfileEditPanel({
   profile,
@@ -34,6 +35,10 @@ export default function ProfileEditPanel({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, phone: formatPhoneMask(e.target.value) }));
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,9 +147,12 @@ export default function ProfileEditPanel({
         <div>
           <label className="block text-sm font-medium mb-1">Телефон</label>
           <input
+            type="tel"
+            inputMode="numeric"
             name="phone"
+            placeholder="+7 702 1234567"
             value={form.phone}
-            onChange={handleChange}
+            onChange={handlePhoneChange}
             className="p-2 border rounded w-full"
           />
         </div>

@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function DashboardNav() {
   const { locale } = useParams();
   const pathname = usePathname();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === "admin" && profile?.status === "approved";
 
   const tabs = [
     { href: `/${locale}/dashboard`, label: "Профиль", exact: true },
     { href: `/${locale}/dashboard/notifications`, label: "Уведомления", exact: false },
+    ...(isAdmin
+      ? [{ href: `/${locale}/dashboard/members`, label: "Члены клуба", exact: false }]
+      : []),
   ];
 
   return (

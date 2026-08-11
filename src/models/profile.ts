@@ -15,4 +15,16 @@ export interface Profile {
   instagram: string | null;
   whatsapp: string | null;
   telegram: string | null;
+  avatar_url: string | null;
+  show_in_members: boolean;
+}
+
+export interface ClubMember {
+  id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  birth_date: string | null;
+  instagram: string | null;
+  whatsapp: string | null;
+  telegram: string | null;
 }

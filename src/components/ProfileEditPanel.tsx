@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 import { createClient } from "@/lib/supabase/client";
 import { Profile } from "@/models";
@@ -24,6 +26,9 @@ export default function ProfileEditPanel({
     whatsapp: profile.whatsapp ?? "",
     telegram: profile.telegram ?? "",
   });
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,9 +36,33 @@ export default function ProfileEditPanel({
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    let finalAvatarUrl = avatarUrl;
+
+    if (avatarFile) {
+      const ext = avatarFile.name.split(".").pop();
+      const fileName = `${profile.id}/${uuidv4()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(fileName, avatarFile);
+      if (uploadError) {
+        toast.error("Не удалось загрузить фото");
+        setLoading(false);
+        return;
+      }
+      const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
+      finalAvatarUrl = data.publicUrl;
+    }
 
     const { error } = await supabase
       .from("profiles")
@@ -44,12 +73,16 @@ export default function ProfileEditPanel({
         instagram: form.instagram || null,
         whatsapp: form.whatsapp || null,
         telegram: form.telegram || null,
+        avatar_url: finalAvatarUrl,
       })
       .eq("id", profile.id);
 
     if (error) toast.error("Не удалось сохранить профиль");
     else {
       toast.success("Профиль обновлён");
+      setAvatarUrl(finalAvatarUrl);
+      setAvatarFile(null);
+      setAvatarPreview(null);
       router.refresh();
     }
     setLoading(false);
@@ -61,6 +94,29 @@ export default function ProfileEditPanel({
       className="bg-white p-6 rounded-xl shadow-md space-y-4 border border-gray-200 mb-8"
     >
       <h2 className="text-xl font-semibold">Мой профиль</h2>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Фото профиля</label>
+        <div className="flex items-center gap-4">
+          {avatarPreview || avatarUrl ? (
+            <Image
+              src={avatarPreview || avatarUrl!}
+              alt=""
+              width={64}
+              height={64}
+              className="w-16 h-16 rounded-full object-cover border"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-gray-200 border" />
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="text-sm"
+          />
+        </div>
+      </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">Email</label>

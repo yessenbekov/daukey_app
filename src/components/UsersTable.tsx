@@ -7,6 +7,7 @@ import {
   ShieldIcon,
   ShieldOffIcon,
   UserCheckIcon,
+  UsersIcon,
   XIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -28,7 +29,13 @@ import {
 } from "@/components/ui/tooltip";
 import { Profile, ProfileStatus } from "@/models";
 
-type ActionType = "approve" | "reject" | "promote" | "demote" | "toggleActive";
+type ActionType =
+  | "approve"
+  | "reject"
+  | "promote"
+  | "demote"
+  | "toggleActive"
+  | "toggleShowInMembers";
 
 function getStatusBadge(status: ProfileStatus) {
   switch (status) {
@@ -83,6 +90,7 @@ export default function UsersTable({
   onPromote,
   onDemote,
   onToggleActive,
+  onToggleShowInMembers,
 }: {
   users: Profile[];
   currentUserId: string;
@@ -91,6 +99,7 @@ export default function UsersTable({
   onPromote: (id: string) => Promise<void>;
   onDemote: (id: string) => Promise<void>;
   onToggleActive: (id: string, nextActive: boolean) => Promise<void>;
+  onToggleShowInMembers: (id: string, next: boolean) => Promise<void>;
 }) {
   const [pendingAction, setPendingAction] = useState<{
     id: string;
@@ -311,6 +320,49 @@ export default function UsersTable({
                           </TooltipContent>
                         </Tooltip>
                       )}
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              aria-label={
+                                user.show_in_members
+                                  ? "Убрать из «Члены клуба»"
+                                  : "Показывать в «Члены клуба»"
+                              }
+                              className={
+                                user.show_in_members
+                                  ? "h-8 w-8 text-blue-600 hover:bg-blue-600 hover:text-white"
+                                  : "h-8 w-8"
+                              }
+                              disabled={busy}
+                              onClick={() =>
+                                runAction(
+                                  user,
+                                  "toggleShowInMembers",
+                                  (id) =>
+                                    onToggleShowInMembers(
+                                      id,
+                                      !user.show_in_members
+                                    )
+                                )
+                              }
+                              size="icon"
+                              variant="outline"
+                            />
+                          }
+                        >
+                          {isPending("toggleShowInMembers", user.id) ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <UsersIcon className="size-4" />
+                          )}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {user.show_in_members
+                            ? "Убрать из «Члены клуба»"
+                            : "Показывать в «Члены клуба»"}
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </TooltipProvider>
                 </TableCell>

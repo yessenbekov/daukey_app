@@ -111,6 +111,21 @@ export default function AdminUsersPage() {
     }
   };
 
+  const toggleShowInMembers = async (id: string, next: boolean) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ show_in_members: next })
+      .eq("id", id);
+
+    if (error) toast.error("Ошибка обновления");
+    else {
+      toast.success(
+        next ? "Добавлен в «Члены клуба»" : "Убран из «Члены клуба»"
+      );
+      fetchUsers();
+    }
+  };
+
   if (authLoading || !isAdmin) {
     return <Spinner className="min-h-screen" label="Проверяем доступ..." />;
   }
@@ -147,6 +162,7 @@ export default function AdminUsersPage() {
           onPromote={promoteToAdmin}
           onDemote={demoteFromAdmin}
           onToggleActive={toggleActive}
+          onToggleShowInMembers={toggleShowInMembers}
         />
       )}
     </div>

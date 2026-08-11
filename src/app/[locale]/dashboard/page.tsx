@@ -54,6 +54,7 @@ export default async function DashboardPage({
           .from("payments")
           .select("*")
           .in("horse_id", horseIds)
+          .order("period", { ascending: false })
           .order("paid_at", { ascending: false })
       : { data: [] };
   const payments = (paymentsData ?? []) as Payment[];

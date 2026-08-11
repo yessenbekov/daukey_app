@@ -148,6 +148,7 @@ export default function AdminReportsPage() {
         .from("payments")
         .select("*")
         .eq("horse_id", selectedHorseId)
+        .order("period", { ascending: false })
         .order("paid_at", { ascending: false });
       setHorsePayments((data || []) as Payment[]);
       setHorseLoading(false);

@@ -35,6 +35,7 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
       .from("payments")
       .select("*")
       .eq("horse_id", horseId)
+      .order("period", { ascending: false })
       .order("paid_at", { ascending: false });
     setPayments((data || []) as Payment[]);
     setPaymentsLoading(false);

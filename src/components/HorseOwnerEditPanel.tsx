@@ -28,6 +28,15 @@ export default function HorseOwnerEditPanel({ horse }: { horse: Horse }) {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const makePhotoMain = (index: number) => {
+    setPhotos((prev) => {
+      const next = [...prev];
+      const [selected] = next.splice(index, 1);
+      next.unshift(selected);
+      return next;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -118,6 +127,20 @@ export default function HorseOwnerEditPanel({ horse }: { horse: Horse }) {
                       height={90}
                       className="h-16 w-full object-cover rounded border"
                     />
+                    {idx === 0 ? (
+                      <span className="absolute bottom-0.5 left-0.5 bg-black/70 text-white rounded px-1 text-[10px]">
+                        Главное
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => makePhotoMain(idx)}
+                        className="absolute bottom-0.5 left-0.5 bg-white/80 rounded px-1 text-[10px] text-blue-700"
+                        title="Сделать главной"
+                      >
+                        Сделать главной
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => removeExistingPhoto(idx)}

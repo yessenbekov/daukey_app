@@ -106,17 +106,18 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
         </div>
       </div>
 
-      {horse.owner_id ? (
-        <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white mb-4 bg-gray-700">
-          {tHorses("statusPrivate")}
-        </p>
-      ) : (
-        horse.for_sale && (
-          <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white mb-4 bg-green-800">
+      <div className="flex flex-wrap gap-2 mb-4">
+        {horse.owner_id && (
+          <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white bg-gray-700">
+            {tHorses("statusPrivate")}
+          </p>
+        )}
+        {horse.for_sale && (
+          <p className="inline-block text-xs font-medium px-2 py-1 rounded-full text-white bg-green-800">
             {tHorses("statusForSale")}
           </p>
-        )
-      )}
+        )}
+      </div>
 
       {horse.photos?.length > 0 && (
         <div className="grid md:grid-cols-2 gap-4 mb-6">

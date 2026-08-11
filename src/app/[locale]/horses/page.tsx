@@ -242,16 +242,15 @@ export default function HorsesPage() {
                         </span>
                       </div>
                     )}
-                    {horse.owner_id ? (
+                    {horse.owner_id && (
                       <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white bg-gray-700">
                         {t("statusPrivate")}
                       </span>
-                    ) : (
-                      horse.for_sale && (
-                        <span className="absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded-full text-white bg-green-800">
-                          {t("statusForSale")}
-                        </span>
-                      )
+                    )}
+                    {horse.for_sale && (
+                      <span className="absolute bottom-2 right-2 text-xs font-medium px-2 py-1 rounded-full text-white bg-green-800">
+                        {t("statusForSale")}
+                      </span>
                     )}
                   </div>
                   <div className="p-4 pb-2">

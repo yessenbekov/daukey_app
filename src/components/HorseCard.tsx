@@ -32,13 +32,13 @@ export default function HorseCard({ horse, onEdit, onDelete }: Props) {
         <button
           type="button"
           onClick={() => openGallery(0)}
-          className="relative aspect-video w-full block"
+          className="relative aspect-video w-full block bg-gray-100"
         >
           <Image
             src={photos[0]}
             alt={horse.name}
             fill
-            className="object-cover"
+            className="object-contain"
             sizes="100vw"
           />
           {photos.length > 1 && (

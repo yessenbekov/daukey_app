@@ -126,7 +126,7 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
             alt={horse.name}
             width={600}
             height={400}
-            className="rounded shadow object-cover w-full h-72 md:h-96 cursor-pointer"
+            className="rounded shadow object-contain bg-gray-100 w-full h-72 md:h-96 cursor-pointer"
             onClick={() => openModal(0)}
           />
 
@@ -139,7 +139,7 @@ export default function HorseDetailClient({ horse }: { horse: Horse }) {
                 alt={`${horse.name} ${idx + 2}`}
                 width={150}
                 height={100}
-                className="rounded shadow object-cover w-full h-28 cursor-pointer"
+                className="rounded shadow object-contain bg-gray-100 w-full h-28 cursor-pointer"
                 onClick={() => openModal(idx + 1)}
               />
             ))}

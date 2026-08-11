@@ -231,7 +231,7 @@ export default function HorsesPage() {
                         src={horse.photos[0]}
                         alt={horse.name}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                         sizes="(min-width: 768px) 33vw, 100vw"
                       />
                     ) : (

@@ -91,7 +91,7 @@ export default async function DashboardPage({
                       alt={horse.name}
                       width={128}
                       height={96}
-                      className="w-32 h-24 object-cover rounded"
+                      className="w-32 h-24 object-contain rounded bg-gray-100"
                     />
                   )}
                   <div>

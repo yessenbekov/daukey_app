@@ -17,6 +17,10 @@ import {
 
 const currentMonth = new Date().toISOString().slice(0, 7);
 
+function toPeriodInput(period: string | null) {
+  return period ?? currentMonth;
+}
+
 export default function PaymentPanel({ horseId }: { horseId: string }) {
   const supabase = createClient();
   const [open, setOpen] = useState(false);
@@ -28,6 +32,51 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
     note: "",
   });
   const [loading, setLoading] = useState(false);
+
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({
+    amount: "",
+    period: currentMonth,
+    paidAt: "",
+    note: "",
+  });
+  const [editLoading, setEditLoading] = useState(false);
+
+  const startEdit = (p: Payment) => {
+    setEditingId(p.id);
+    setEditForm({
+      amount: String(p.amount),
+      period: toPeriodInput(p.period),
+      paidAt: p.paid_at,
+      note: p.note ?? "",
+    });
+  };
+
+  const cancelEdit = () => setEditingId(null);
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId || !editForm.amount) return;
+    setEditLoading(true);
+
+    const { error } = await supabase
+      .from("payments")
+      .update({
+        amount: Number(editForm.amount),
+        period: editForm.period || null,
+        paid_at: editForm.paidAt,
+        note: editForm.note || null,
+      })
+      .eq("id", editingId);
+
+    if (error) toast.error("Ошибка сохранения платежа");
+    else {
+      toast.success("Платёж обновлён");
+      setEditingId(null);
+      fetchPayments();
+    }
+    setEditLoading(false);
+  };
 
   const fetchPayments = async () => {
     setPaymentsLoading(true);
@@ -137,27 +186,111 @@ export default function PaymentPanel({ horseId }: { horseId: string }) {
                     <TableHead className="h-8 px-2 text-xs">
                       Примечание
                     </TableHead>
+                    <TableHead className="h-8 px-2 text-xs" />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {payments.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell className="h-9 px-2 text-xs text-muted-foreground">
-                        {p.paid_at}
-                      </TableCell>
-                      <TableCell className="h-9 px-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {formatPeriod(p.period)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="h-9 px-2 text-xs font-medium">
-                        {p.amount.toLocaleString("ru-RU")} ₸
-                      </TableCell>
-                      <TableCell className="h-9 px-2 text-xs text-muted-foreground whitespace-normal">
-                        {p.note || "—"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {payments.map((p) =>
+                    editingId === p.id ? (
+                      <TableRow key={p.id}>
+                        <TableCell colSpan={5} className="p-2">
+                          <form
+                            onSubmit={handleEditSubmit}
+                            className="flex flex-wrap items-center gap-2"
+                          >
+                            <input
+                              type="date"
+                              value={editForm.paidAt}
+                              onChange={(e) =>
+                                setEditForm((f) => ({
+                                  ...f,
+                                  paidAt: e.target.value,
+                                }))
+                              }
+                              className="p-1 border rounded text-sm"
+                              required
+                            />
+                            <input
+                              type="month"
+                              value={editForm.period}
+                              onChange={(e) =>
+                                setEditForm((f) => ({
+                                  ...f,
+                                  period: e.target.value,
+                                }))
+                              }
+                              className="p-1 border rounded text-sm"
+                            />
+                            <input
+                              type="number"
+                              placeholder="Сумма"
+                              value={editForm.amount}
+                              onChange={(e) =>
+                                setEditForm((f) => ({
+                                  ...f,
+                                  amount: e.target.value,
+                                }))
+                              }
+                              className="p-1 border rounded text-sm w-24"
+                              required
+                            />
+                            <input
+                              type="text"
+                              placeholder="Примечание"
+                              value={editForm.note}
+                              onChange={(e) =>
+                                setEditForm((f) => ({
+                                  ...f,
+                                  note: e.target.value,
+                                }))
+                              }
+                              className="p-1 border rounded text-sm flex-1 min-w-32"
+                            />
+                            <button
+                              type="submit"
+                              disabled={editLoading}
+                              className="px-3 py-1 bg-black text-white rounded text-sm disabled:opacity-50"
+                            >
+                              Сохранить
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelEdit}
+                              className="px-3 py-1 border rounded text-sm"
+                            >
+                              Отмена
+                            </button>
+                          </form>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      <TableRow key={p.id}>
+                        <TableCell className="h-9 px-2 text-xs text-muted-foreground">
+                          {p.paid_at}
+                        </TableCell>
+                        <TableCell className="h-9 px-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {formatPeriod(p.period)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="h-9 px-2 text-xs font-medium">
+                          {p.amount.toLocaleString("ru-RU")} ₸
+                        </TableCell>
+                        <TableCell className="h-9 px-2 text-xs text-muted-foreground whitespace-normal">
+                          {p.note || "—"}
+                        </TableCell>
+                        <TableCell className="h-9 px-2 text-right">
+                          <button
+                            type="button"
+                            onClick={() => startEdit(p)}
+                            className="text-xs text-blue-600 hover:underline"
+                          >
+                            Изменить
+                          </button>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>

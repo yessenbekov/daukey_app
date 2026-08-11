@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthProvider";
 import { Horse, Payment, Profile } from "@/models";
 import { formatPeriod } from "@/utils/formatPeriod";
+import { buildReportPdf, sharePdf } from "@/lib/pdf/generateReportPdf";
 import AdminNav from "@/components/AdminNav";
 import Spinner from "@/components/Spinner";
 import { Badge } from "@/components/ui/badge";
@@ -158,6 +159,59 @@ export default function AdminReportsPage() {
 
   const horseTotal = horsePayments.reduce((sum, p) => sum + Number(p.amount), 0);
 
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  const buildPeriodPdf = () =>
+    buildReportPdf({
+      title: `Отчёт по оплатам за ${formatPeriod(period)}`,
+      head: ["Лошадь", "Владелец", "Статус", "Сумма"],
+      rows: filteredPeriodRows.map(({ horse, ownerName, total, paid }) => [
+        horse.name,
+        ownerName,
+        paid ? "Оплачено" : "Не оплачено",
+        paid ? formatAmount(total) : "—",
+      ]),
+      footerLines: [
+        `Оплатили: ${paidCount}`,
+        `Не оплатили: ${unpaidCount}`,
+        `Итого собрано: ${formatAmount(periodTotal)}`,
+      ],
+    });
+
+  const handlePeriodPdf = async (action: "download" | "share") => {
+    setPdfBusy(true);
+    const doc = buildPeriodPdf();
+    const filename = `otchet-${period}.pdf`;
+    if (action === "download") doc.save(filename);
+    else await sharePdf(doc, filename, `Отчёт за ${formatPeriod(period)}`);
+    setPdfBusy(false);
+  };
+
+  const selectedHorseName =
+    horses.find((h) => h.id === selectedHorseId)?.name || "лошадь";
+
+  const buildHorsePdf = () =>
+    buildReportPdf({
+      title: `История платежей — ${selectedHorseName}`,
+      head: ["Дата", "Период", "Сумма", "Примечание"],
+      rows: horsePayments.map((p) => [
+        p.paid_at,
+        formatPeriod(p.period),
+        formatAmount(Number(p.amount)),
+        p.note || "—",
+      ]),
+      footerLines: [`Всего оплачено: ${formatAmount(horseTotal)}`],
+    });
+
+  const handleHorsePdf = async (action: "download" | "share") => {
+    setPdfBusy(true);
+    const doc = buildHorsePdf();
+    const filename = `platezhi-${selectedHorseName}.pdf`;
+    if (action === "download") doc.save(filename);
+    else await sharePdf(doc, filename, `Платежи — ${selectedHorseName}`);
+    setPdfBusy(false);
+  };
+
   if (authLoading || !isAdmin) {
     return <Spinner className="min-h-screen" label="Проверяем доступ..." />;
   }
@@ -235,6 +289,25 @@ export default function AdminReportsPage() {
                   <div className="px-3 py-2 rounded bg-gray-100 text-gray-800">
                     Собрано за {formatPeriod(period)}: <strong>{formatAmount(periodTotal)}</strong>
                   </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <button
+                    type="button"
+                    disabled={pdfBusy}
+                    onClick={() => handlePeriodPdf("download")}
+                    className="px-3 py-1.5 border rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Скачать PDF
+                  </button>
+                  <button
+                    type="button"
+                    disabled={pdfBusy}
+                    onClick={() => handlePeriodPdf("share")}
+                    className="px-3 py-1.5 border rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Отправить
+                  </button>
                 </div>
 
                 {filteredPeriodRows.length === 0 ? (
@@ -322,6 +395,24 @@ export default function AdminReportsPage() {
                 <p className="text-sm text-gray-600 mb-3">
                   Всего оплачено: <strong>{formatAmount(horseTotal)}</strong>
                 </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <button
+                    type="button"
+                    disabled={pdfBusy}
+                    onClick={() => handleHorsePdf("download")}
+                    className="px-3 py-1.5 border rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Скачать PDF
+                  </button>
+                  <button
+                    type="button"
+                    disabled={pdfBusy}
+                    onClick={() => handleHorsePdf("share")}
+                    className="px-3 py-1.5 border rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                  >
+                    Отправить
+                  </button>
+                </div>
                 <div className="rounded-lg border bg-card overflow-x-auto">
                   <Table>
                     <TableHeader>

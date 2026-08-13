@@ -28,7 +28,7 @@ const emptyForm = {
   weight: "",
   description: "",
   price: "",
-  for_sale: true,
+  for_sale: false,
 };
 
 export default function AdminHorsesPage() {

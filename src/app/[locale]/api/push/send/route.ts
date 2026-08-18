@@ -71,6 +71,17 @@ export async function POST(request: Request) {
         const statusCode = (err as { statusCode?: number }).statusCode;
         if (statusCode === 404 || statusCode === 410) {
           expiredEndpoints.push(sub.endpoint);
+        } else {
+          // Не 404/410 — подписка не протухла, но отправка всё равно не
+          // прошла (например VAPID mismatch, payload too large, 5xx у
+          // push-сервиса). Раньше это молча терялось, теперь хотя бы
+          // видно в логах Vercel, что именно и по какому endpoint упало.
+          console.error(
+            "[push] send failed",
+            sub.endpoint,
+            statusCode,
+            (err as Error).message
+          );
         }
       }
     })
